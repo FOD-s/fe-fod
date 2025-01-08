@@ -1,12 +1,105 @@
-// token dummy
-localStorage.setItem(
-  "token",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImZ1IiwicGFzc3dvcmQiOiIkMmEkMTQkRlpLSGtHYm5PUmtJVGlnbnJ0WFdZT2xHcXlaNG1DVGFLWkdRV2Q4Y3Y5UlpkMElRaHpuUk8iLCJlbWFpbCI6ImZ1QGZ1LmNvbSIsImV4cCI6MTcxOTQ3MjQ2N30.zmwIRYqsfgT8z_U7Gm3yhWCon-t3TaH9DIaqFNiRONc"
-);
+import {
+	AudioWaveform,
+	CalendarCheck2,
+	Command,
+	Frame,
+	GalleryVerticalEnd,
+	Map,
+	PieChart,
+	School,
+	Store,
+	UserRound
+} from "lucide-react";
 
-const token = localStorage.getItem("token");
-export const HEADERS_REQUEST = {
-  headers: {
-    Authorization: `${token}`,
-  },
+export const DATA_NAV = {
+	user: {
+		name: "shadcn",
+		email: "m@example.com",
+		avatar: "/avatars/shadcn.jpg",
+	},
+	teams: [
+		{
+			name: "Acme Inc",
+			logo: GalleryVerticalEnd,
+			plan: "Enterprise",
+		},
+		{
+			name: "Acme Corp.",
+			logo: AudioWaveform,
+			plan: "Startup",
+		},
+		{
+			name: "Evil Corp.",
+			logo: Command,
+			plan: "Free",
+		},
+	],
+	navMain: [
+		{
+			title: "Schools",
+			url: "#",
+			icon: School,
+			isActive: true,
+			items: [
+				{
+					title: "List",
+					url: "/schools",
+				},
+			],
+		},
+		{
+			title: "Class",
+			url: "#",
+			icon: Store,
+			isActive: true,
+			items: [
+				{
+					title: "List",
+					url: "/class",
+				},
+			],
+		},
+		{
+			title: "Schedules",
+			url: "#",
+			icon: CalendarCheck2,
+			isActive: true,
+			items: [
+				{
+					title: "List",
+					url: "/schedules",
+				},
+			],
+		},
+	],
+	navManagement: [
+		{
+			title: "Users",
+			icon: UserRound,
+			isActive: true,
+			items: [
+				{
+					title: "List",
+					url: "/users",
+				},
+			],
+		},
+	],
+	projects: [
+		{
+			name: "Design Engineering",
+			url: "#",
+			icon: Frame,
+		},
+		{
+			name: "Sales & Marketing",
+			url: "#",
+			icon: PieChart,
+		},
+		{
+			name: "Travel",
+			url: "#",
+			icon: Map,
+		},
+	],
 };

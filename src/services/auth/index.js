@@ -1,20 +1,31 @@
 /* eslint-disable no-unused-vars */
 import endpoint from "../endpoint";
-import { GET, POST, PUT, PATCH, DELETE, POST_LOGIN } from "../method";
+import useApi from "@/services/method";
 
-// POST_LOGIN
-// const login = (dataBody) => POST_LOGIN(`${endpoint.reqToken}`, dataBody);
+const useAuthService = () => {
+	const { GET, POST, PUT, PATCH, DELETE, POST_LOGIN } = useApi();
 
-// GET
-const getUsers = () => GET(`${endpoint.user}`);
+	// POST_LOGIN
+	// const login = (dataBody) => POST_LOGIN(`${endpoint.reqToken}`, dataBody);
 
-// POST
+	// GET
+	const getUsers = () => GET(`${endpoint.user}`);
+	const getProfile = () => GET(`${endpoint.profileAdmin}`);
+	const checkValidateToken = (dataBody) =>
+		POST_LOGIN(`${endpoint.checkValidateToken}`, dataBody);
 
-// PUT
+	// POST
+	const login = (dataBody) =>
+		POST_LOGIN(`${endpoint.login}`, dataBody);
 
-// PATCH
+	// PUT
 
-// DELETE
+	// PATCH
 
-const AUTH_SERVICE = { getUsers };
-export default AUTH_SERVICE;
+	// DELETE
+	const logoutAdmin = () => DELETE(`${endpoint.logoutAdmin}`);
+
+	return { getUsers, getProfile, checkValidateToken, login, logoutAdmin };
+};
+
+export default useAuthService;

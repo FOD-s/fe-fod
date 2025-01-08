@@ -1,16 +1,9 @@
 const endpoint = {
   // User
   user: "/users",
-  // reqToken: `api/token`,
 
   // Admin
-  // addAdmin: `api/admin/register`,
-
-  // companies
-  // companies: `api/admin/companies`,
-
-  // contoh endpoint yang membutuhkan pagination
-  vehicleEngineHistory: "/secured/regall",
+  login:"/login",
 };
 
 export default endpoint;
