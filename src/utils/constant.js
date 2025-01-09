@@ -8,7 +8,11 @@ import {
 	PieChart,
 	School,
 	Store,
-	UserRound
+	UserRound,
+	ShoppingCart,
+	Users,
+	Bed,
+	ChartPie
 } from "lucide-react";
 
 export const DATA_NAV = {
@@ -36,41 +40,53 @@ export const DATA_NAV = {
 	],
 	navMain: [
 		{
-			title: "Schools",
+			title: "Orders",
 			url: "#",
-			icon: School,
+			icon: ShoppingCart,
 			isActive: true,
 			items: [
 				{
 					title: "List",
-					url: "/schools",
+					url: "/orders",
 				},
 			],
 		},
 		{
-			title: "Class",
+			title: "Products",
 			url: "#",
-			icon: Store,
+			icon: Bed,
 			isActive: true,
 			items: [
 				{
 					title: "List",
-					url: "/class",
+					url: "/products",
 				},
 			],
 		},
 		{
-			title: "Schedules",
+			title: "Customers",
 			url: "#",
-			icon: CalendarCheck2,
+			icon: Users,
 			isActive: true,
 			items: [
 				{
 					title: "List",
-					url: "/schedules",
+					url: "/customers",
 				},
 			],
 		},
+		{
+			title:"Analytics",
+			url: "#",
+			icon: ChartPie,
+			isActive: true,
+			items: [
+				{
+					title: "List",
+					url: "/analytics",
+				},
+			]
+		}
 	],
 	navManagement: [
 		{

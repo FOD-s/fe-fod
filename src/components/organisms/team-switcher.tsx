@@ -6,7 +6,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
-import IconSiPandu from "@/assets/icons/icon_sipandu.png";
+import Icon from "@/assets/imgs/pu.png";
 
 export function TeamSwitcher({
   teams,
@@ -31,11 +31,11 @@ export function TeamSwitcher({
             >
               <div className="flex items-center justify-center rounded-lg aspect-square size-8 text-sidebar-primary-foreground">
                 {/* <activeTeam.logo className="size-4" /> */}
-                <img src={IconSiPandu} className="size-8" alt="icons"/>
+                <img src={Icon} className="size-8" alt="icons" className="rounded-sm"/>
               </div>
               <div className="grid flex-1 text-sm leading-tight text-left">
                 <span className="font-semibold truncate">
-                  SiPANDU
+                  PRIMA UTAMA
                 </span>
                 {/* <span className="text-xs truncate">{activeTeam.plan}</span> */}
               </div>

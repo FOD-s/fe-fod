@@ -45,7 +45,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 						</SidebarGroup>
 					)}
 				</NavLink>
-				<NavMain items={data.navMain} label="Settings" />
+				<NavMain items={data.navMain} label="Selling" />
 				<NavMain items={data.navManagement} label="Management" />
 			</SidebarContent>
 			<SidebarFooter className="px-3">
