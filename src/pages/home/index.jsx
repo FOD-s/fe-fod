@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import WithAuth from "@/hoc/WithAuth";
 
 const Home = () => {
 	return (
@@ -42,4 +43,4 @@ const Home = () => {
 	);
 };
 
-export default Home;
+export default WithAuth(Home);

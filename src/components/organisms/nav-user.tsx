@@ -28,6 +28,7 @@ import { updateToken } from "@/features/auth/loginSlice";
 import useAuthService from "@/services/auth";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 
 export function NavUser({
 	user,
@@ -42,12 +43,16 @@ export function NavUser({
 	const navigate = useNavigate();
 	const { logoutAdmin } = useAuthService();
 	const dispatch = useDispatch();
+	const toast = useToast();
 
 	const logout = async () => {
 		try {
 			const res = await logoutAdmin();
 			if (res?.status !== 200) {
-				return alert("cuwaw");
+				return toast({
+					vaiant:"destructive",
+					description: "Failed to logout",
+				});
 			}
 			navigate("/login");
 			return dispatch(updateToken(""));
@@ -66,13 +71,13 @@ export function NavUser({
 							className="data-[state=open]:bg-bg-neumorphism data-[state=open]:text-sidebar-accent-foreground data-[state=open]:shadow-neumorphism-inner hover:bg-bg-neumorphism hover:shadow-neumorphism-hover"
 						>
 							<Avatar className="w-8 h-8 rounded-lg">
-								<AvatarImage src={user.avatar} alt={user.Name} />
+								<AvatarImage src={user?.avatar} alt={user?.name} />
 								<AvatarFallback className="rounded-lg">
 									<User />
 								</AvatarFallback>
 							</Avatar>
 							<div className="grid flex-1 text-sm leading-tight text-left">
-								<span className="font-semibold truncate">{user.Name}</span>
+								<span className="font-semibold truncate">{user?.name}</span>
 								{/* <span className="text-xs truncate">{profile.email}</span> */}
 							</div>
 							<EllipsisVertical className="ml-auto size-4" />
@@ -87,13 +92,13 @@ export function NavUser({
 						<DropdownMenuLabel className="p-0 font-normal">
 							<div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
 								<Avatar className="w-8 h-8 rounded-lg">
-									<AvatarImage src={user.avatar} alt={user.Name} />
+									<AvatarImage src={user?.avatar} alt={user?.name} />
 									<AvatarFallback className="rounded-lg">
 										<User />
 									</AvatarFallback>
 								</Avatar>
 								<div className="grid flex-1 text-sm leading-tight text-left">
-									<span className="font-semibold truncate">{user.Name}</span>
+									<span className="font-semibold truncate">{user?.name}</span>
 									{/* <span className="text-xs truncate">{profile.email}</span> */}
 								</div>
 							</div>

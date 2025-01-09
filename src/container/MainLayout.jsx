@@ -7,7 +7,6 @@ import {
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Outlet } from "react-router-dom";
-import WithAuth from "@/hoc/WithAuth";
 
 function Layout() {
 	// mengambil nilai dari store
@@ -22,12 +21,12 @@ function Layout() {
 	}, [isLogin]);
 
 	return (
-		<>
+		<div>
 			<SidebarProvider>
 				<AppSidebar />
 				<SidebarInset>
 					<header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 bg-bg-neumorphism">
-						<div className="flex items-center gap-2 px-4">
+						<div className="flex items-center gap-2 px-4 bg-bg-neumorphism">
 							<SidebarTrigger className="-ml-1 hover:bg-bg-neumorphism shadow-neumorphism hover:shadow-neumorphism-hover" />
 							{/* <Separator orientation="vertical" className="h-4 mr-2" />
 							<Breadcrumb>
@@ -50,8 +49,8 @@ function Layout() {
 					</div>
 				</SidebarInset>
 			</SidebarProvider>
-		</>
+		</div>
 	);
 }
 
-export default WithAuth(Layout);
+export default Layout;

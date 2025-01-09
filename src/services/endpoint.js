@@ -2,8 +2,15 @@ const endpoint = {
   // User
   user: "/users",
 
+
   // Admin
-  login:"/login",
+  loginAdmin:"/login",
+  logoutAdmin:"/logout",
+  checkValidateToken:"/check-token",
+  authMe:"/auth/me",
+  profile:"/profile",
+
+
 };
 
 export default endpoint;

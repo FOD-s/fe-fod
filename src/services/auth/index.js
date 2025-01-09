@@ -9,23 +9,31 @@ const useAuthService = () => {
 	// const login = (dataBody) => POST_LOGIN(`${endpoint.reqToken}`, dataBody);
 
 	// GET
+	const authMe = () => GET(`${endpoint.authMe}`);
 	const getUsers = () => GET(`${endpoint.user}`);
-	const getProfile = () => GET(`${endpoint.profileAdmin}`);
+	const getProfile = () => GET(`${endpoint.authMe}`);
 	const checkValidateToken = (dataBody) =>
 		POST_LOGIN(`${endpoint.checkValidateToken}`, dataBody);
 
 	// POST
-	const login = (dataBody) =>
-		POST_LOGIN(`${endpoint.login}`, dataBody);
+	const loginAdmin = (dataBody) =>
+		POST_LOGIN(`${endpoint.loginAdmin}`, dataBody);
 
 	// PUT
 
 	// PATCH
 
 	// DELETE
-	const logoutAdmin = () => DELETE(`${endpoint.logoutAdmin}`);
+	const logoutAdmin = () => POST(`${endpoint.logoutAdmin}`);
 
-	return { getUsers, getProfile, checkValidateToken, login, logoutAdmin };
+	return {
+		getUsers,
+		getProfile,
+		checkValidateToken,
+		loginAdmin,
+		logoutAdmin,
+		authMe,
+	};
 };
 
 export default useAuthService;

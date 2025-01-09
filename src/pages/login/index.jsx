@@ -10,12 +10,12 @@ import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 
 const formValues = {
-	username: "",
+	email: "",
 	password: "",
 };
 
 const schema = yup.object().shape({
-	username: yup.string().required("username is required"),
+	email: yup.string().required("email is required"),
 	password: yup.string().required("password is required"),
 });
 
@@ -49,7 +49,7 @@ const Login = () => {
 			toast({
 				description: res.data.message,
 			});
-			dispatch(updateToken(res.data.data.access_token));
+			dispatch(updateToken(res.data.token));
 			return navigate("/");
 		} catch (error) {
 			return toast({
@@ -60,54 +60,47 @@ const Login = () => {
 	};
 
 	return (
-		<div class="bg-bg-neumorphism bg-center bg-cover h-screen w-full flex items-center justify-center [perspective:1000px]">
-			<div class="w-3/4 lg:w-1/3 2xl:w-1/4 relative flip-card-inner transition-transform duration-700 transform-gpu [transform-style:preserve-3d] h-full flex items-center">
-				<div class="[backface-visibility:hidden] gap-6 bg-bg-neumorphism shadow-neumorphism rounded-2xl p-10 w-full flex flex-col justify-center">
-					<p
-						tabindex="0"
-						class="focus:outline-none text-2xl font-extrabold leading-6 text-gray-800 transition-all duration-500"
-					>
+		<div className="bg-bg-neumorphism bg-center bg-cover h-screen w-full flex items-center justify-center [perspective:1000px]">
+			<div className="w-3/4 lg:w-1/3 2xl:w-1/4 relative flip-card-inner transition-transform duration-700 transform-gpu [transform-style:preserve-3d] h-full flex items-center">
+				<div className="[backface-visibility:hidden] gap-6 bg-bg-neumorphism shadow-neumorphism rounded-2xl p-10 w-full flex flex-col justify-center">
+					<p className="text-2xl font-extrabold leading-6 text-gray-800 transition-all duration-500 focus:outline-none">
 						Login to your account
 					</p>
-					{/* Suggested code may be subject to a license. Learn more: ~LicenseLog:516438468. */}
 					<form onSubmit={handleSubmit(onSubmitLogin)}>
 						<div>
 							<label
-								id="username"
-								class="text-sm font-medium leading-none text-gray-800"
+								id="email"
+								className="text-sm font-medium leading-none text-gray-800"
 							>
-								Username
+								email
 							</label>
 							<input
-								aria-labelledby="username"
+								aria-labelledby="email"
 								type="text"
-								id="username"
-								class="rounded text-xs font-medium leading-none text-gray-800 py-4 w-full pl-3 mt-2 bg-bg-neumorphism shadow-neumorphism-inner focus:shadow-neumorphism-inner focus:outline-none [autofill:bg-bg-neumorphism]"
-								placeholder="Type username here ..."
-								{...register("username")}
+								id="email"
+								className="rounded text-xs font-medium leading-none text-gray-800 py-4 w-full pl-3 mt-2 bg-bg-neumorphism shadow-neumorphism-inner focus:shadow-neumorphism-inner focus:outline-none [autofill:bg-bg-neumorphism]"
+								placeholder="Type email here ..."
+								{...register("email")}
 							/>
-							{errors.username && (
-								<p className="text-red-500">{errors.username.message}</p>
+							{errors.email && (
+								<p className="text-red-500">{errors.email.message}</p>
 							)}
 						</div>
-						<div class="mt-6 w-full">
-							<label
-								for="password"
-								class="text-sm font-medium leading-none text-gray-800"
-							>
+						<div className="w-full mt-6">
+							<label className="text-sm font-medium leading-none text-gray-800">
 								Password
 							</label>
-							<div class="relative flex items-center justify-center">
+							<div className="relative flex items-center justify-center">
 								<input
-									formControlName="password"
+									name="password"
 									id="password"
 									type={`${typePassword ? "password" : "text"}`}
-									class="rounded text-xs font-medium leading-none text-gray-800 py-4 w-full pl-3 mt-2 bg-bg-neumorphism shadow-neumorphism-inner focus:shadow-neumorphism-inner focus:outline-none"
+									className="w-full py-4 pl-3 mt-2 text-xs font-medium leading-none text-gray-800 rounded bg-bg-neumorphism shadow-neumorphism-inner focus:shadow-neumorphism-inner focus:outline-none"
 									placeholder="Type password here ..."
 									{...register("password")}
 								/>
 								<div
-									class="absolute right-0 mt-2 mr-3 cursor-pointer"
+									className="absolute right-0 mt-2 mr-3 cursor-pointer"
 									onClick={() => setTypePassword(!typePassword)}
 								>
 									<svg
@@ -128,7 +121,7 @@ const Login = () => {
 								<p className="text-red-500">{errors.password.message}</p>
 							)}
 						</div>
-						<div class="mt-8 mb-6">
+						<div className="mt-8 mb-6">
 							<button
 								type="submit"
 								className={`text-sm font-semibold leading-none text-white py-4 w-full rounded focus:outline-none bg-indigo-700 transition-all duration-300 hover:shadow-neumorphism-hover active:shadow-neumorphism-inner shadow-neumorphism`}
