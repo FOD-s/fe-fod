@@ -1,13 +1,13 @@
 import { createBrowserRouter } from "react-router-dom";
 import { lazy } from "react";
 
-const Home = lazy(() => import("@/pages/home/"));
-const Vehicle = lazy(() => import("@/pages/vehicle"));
-const DetailVehicle = lazy(() => import("@/pages/vehicle/detail"));
 const Layout = lazy(() => import("@/container/MainLayout"));
 const Login = lazy(() => import("@/pages/login"));
 const NotFound = lazy(() => import("@/components/molecules/NotFound"));
-const SearchVehicleHistory = lazy(() => import("@/pages/vehicle/search"));
+
+// Pages
+const Home = lazy(() => import("@/pages/home/"));
+const Order = lazy(() => import("@/pages/order/"));
 
 export const router = createBrowserRouter([
   {
@@ -19,20 +19,9 @@ export const router = createBrowserRouter([
         index: true,
         element: <Home />,
       },
-
       {
-        path: "/vehicle",
-        element: <Vehicle />,
-        children: [
-          {
-            path: "detail/:id",
-            element: <DetailVehicle />
-          },
-        ],
-      },
-      {
-        path: "/vehicle/search",
-        element: <SearchVehicleHistory />,
+        path: "/orders",
+        element: <Order />,
       },
     ],
   },

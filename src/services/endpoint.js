@@ -10,6 +10,8 @@ const endpoint = {
   authMe:"/auth/me",
   profile:"/profile",
 
+  // Order
+  order: "/orders",
 
 };
 

@@ -1,240 +1,266 @@
 /* eslint-disable react/prop-types */
-import DataTable from "react-data-table-component";
-import MessageEmptyData from "../atoms/MessageEmptyData";
-import { CircularProgress } from "@mui/material";
+import SearchInput from "@/components/molecules/SearchInput";
+import { Button } from "@/components/ui/button.tsx";
+import { LOADING } from "@/features/loading/loadingSlice.js";
+import { PAGINATION } from "@/features/pagination/paginationSlice.js";
 import { EyeIcon, PencilIcon, TrashIcon } from "@heroicons/react/24/solid";
+import DataTable from "react-data-table-component";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import MainSkeleton from "../atoms/MainSkeleton";
+import MessageEmptyData from "../atoms/MessageEmptyData";
 
 // custom style header
 let customStyles = {
-  headCells: {
-    style: {
-      justifyContent: "center",
-      fontWeight: "bolder",
-    },
-  },
+	headCells: {
+		style: {
+			justifyContent: "center",
+			fontWeight: "bolder",
+		},
+	},
 };
 
 let conditionalOverdue = [
-  {
-    when: (row) => row.overdue,
-    style: {
-      backgroundColor: "#dc3545",
-      color: "#efefef",
-    },
-  },
+	{
+		when: (row) => row.overdue,
+		style: {
+			backgroundColor: "#dc3545",
+			color: "#efefef",
+		},
+	},
 ];
 
 const DataTablePagination = ({
-  statusAksi,
-  data,
-  loading,
-  params,
-  handlePageChange,
-  handlePerRowsChange,
-  currentRow,
-  handleRowClicked,
+	statusAksi,
+	data,
+	params,
+	handlePageChange,
+	handlePerRowsChange,
+	currentRow,
+	handleRowClicked,
+	handleAdd,
+	handleEdit,
+	handleDelete,
 }) => {
-  const navigate = useNavigate();
-  let { page, size, totalRows } = params;
-  // const handleAdd = () => {};
+	const pagination = useSelector(PAGINATION);
+	const loading = useSelector(LOADING);
 
-  const handleEdit = (row) => {
-    // redirect ke page edit
-    navigate(`/vehicle/detail/${row.IME}`);
-  };
+	const navigate = useNavigate();
+	let { page, size, totalItems } = pagination;
+	// const handleAdd = () => {};
 
-  const handleDelete = () => {
-    // redirect ke page delete
-  };
+	const handleDetail = () => {
+		// redirect ke page detail
+	};
 
-  const handleDetail = () => {
-    // redirect ke page detail
-  };
+	const renderLogo = (url) => {
+		return (
+			<span className="grid w-16 h-16 p-2 place-items-center">
+				<img src={url} alt={url} className="w-full h-full rounded-xl" />
+			</span>
+		);
+	};
 
-  let columns = [
-    {
-      name: "No.",
-      cell: (row, index) => (page - 1) * size + parseInt(index + 1),
-      width: "5em",
-      right: true,
-      center: true,
-    },
-  ];
+	let columns = [
+		{
+			name: "No.",
+			cell: (row, index) => (page - 1) * size + parseInt(index + 1),
+			width: "5em",
+			right: true,
+			center: true,
+		},
+	];
 
-  if (data?.length > 0) {
-    let keys = Object.keys(data[0]);
+	if (data?.length > 0) {
+		let keys = Object.keys(data[0]);
 
-    keys.forEach((key) => {
-      switch (key) {
-        case "NOP":
-          columns.push({
-            name: "Nop",
-            selector: (row) => row.NOP,
-            sortable: true,
-            wrap: true,
+		keys.forEach((key) => {
+			switch (key) {
+				case "logo":
+					columns.push({
+						name: "Logo",
+						selector: (row) => row.logo,
+						center: true,
+						cell: (row) =>
+							row.logo ? (
+								renderLogo(row.logo)
+							) : (
+								<span className="w-full text-center">-</span>
+							),
+					});
+					break;
+				case "name":
+					columns.push({
+						name: "Name",
+						selector: (row) => row.name,
+						sortable: true,
+						center: true,
+						grow: 1,
+						cell: (row) =>
+							row.name ? (
+								row.name
+							) : (
+								<span className="w-full text-center">-</span>
+							),
+					});
+					break;
+				case "sales":
+					columns.push({
+						name: "Sales",
+						selector: (row) => row.sales,
+						sortable: true,
+					});
+					break;
+				case "status":
+					columns.push({
+						name: "Status",
+						selector: (row) => row.status,
+						// sortable: true,
             center: true,
-            // Menampilkan jika terdapat anak data pada setiap kolom
-            // cell: (row) => renderPillStatus(row.status),
-            // center: true,
-          });
-          break;
-        case "JEK":
-          columns.push({
-            name: "Jenis Kendaraan",
-            selector: (row) => row.JEK,
-            sortable: true,
+					});
+					break;
+				case "validator":
+					columns.push({
+						name: "Validator",
+						selector: (row) => row.validator,
+						// sortable: true,
             center: true,
-
-            cell: (row) =>
-              row.JEK ? row.JEK : <span className="w-full text-center">-</span>,
-          });
-          break;
-        case "C_NAME":
-          columns.push({
-            name: "Perusahaan",
-            selector: (row) => row.C_NAME,
-            sortable: true,
+					});
+					break;
+				case "dateOrder":
+					columns.push({
+						name: "Tanggal Order",
+						selector: (row) => row.dateOrder,
+						// sortable: true,
             center: true,
+					});
+					break;
+				default:
+					break;
+			}
+		});
+	}
 
-            // grow: 9,
-            // cell: (row) => (row.hari == null ? "-" : row.hari),
-            // center: true,
-          });
-          break;
-        case "BAT_VOLT":
-          columns.push({
-            name: "Vot Baterai",
-            selector: (row) => row.BAT_VOLT,
-            sortable: true,
-            center: true,
-          });
-          break;
-        default:
-          break;
-      }
-    });
-  }
+	// menampilkan action modal
+	switch (statusAksi) {
+		case "nonAction":
+			break;
+		case "editOnly":
+			columns.push({
+				name: "Action",
+				cell: (row) => (
+					<div
+						className="flex w-full cursor-pointer justify-evenly"
+						onClick={() => handleEdit(row)}
+					>
+						<PencilIcon className="w-5 h-5 text-orange-500" title="Ubah" />
+					</div>
+				),
+				allowOverflow: true,
+				button: true,
+			});
+			break;
+		case "detailOnly":
+			columns.push({
+				name: "Action",
+				cell: (row) => (
+					<div
+						className="flex w-full cursor-pointer justify-evenly"
+						onClick={() => handleDetail(row)}
+					>
+						<EyeIcon className="w-5 h-5 text-blue-700" title="Detail" />
+					</div>
+				),
+				allowOverflow: true,
+				button: true,
+			});
+			break;
+		case "editAndDetail":
+			columns.push({
+				name: "Aksi",
+				cell: (row) => (
+					<div className="flex w-full justify-evenly">
+						<EyeIcon
+							className="w-5 h-5 text-orange-500 cursor-pointer"
+							title="Detail"
+							onClick={() => handleEdit(row)}
+						/>
+						<PencilIcon
+							className="w-5 h-5 text-blue-700 cursor-pointer"
+							title="Ubah"
+							onClick={() => handleEdit(row)}
+						/>
+					</div>
+				),
+				allowOverflow: true,
+				button: true,
+			});
+			break;
+		default:
+			columns.push({
+				name: "Action",
+				cell: (row) => (
+					<div className="flex w-full justify-evenly">
+						{/* <EyeIcon
+							className="w-5 h-5 text-blue-700 cursor-pointer"
+							title="Detail"
+							onClick={() => handleDetail(row)}
+						/> */}
 
-  // menampilkan action modal
-  switch (statusAksi) {
-    case "nonAction":
-      break;
-    case "editOnly":
-      columns.push({
-        name: "Action",
-        cell: (row) => (
-          <div
-            className="flex w-full cursor-pointer justify-evenly"
-            onClick={() => handleEdit(row)}
-          >
-            <PencilIcon className="w-5 h-5 text-orange-500" title="Ubah" />
-          </div>
-        ),
-        allowOverflow: true,
-        button: true,
-      });
-      break;
-    case "detailOnly":
-      columns.push({
-        name: "Action",
-        cell: (row) => (
-          <div
-            className="flex w-full cursor-pointer justify-evenly"
-            onClick={() => handleDetail(row)}
-          >
-            <EyeIcon className="w-5 h-5 text-blue-700" title="Detail" />
-          </div>
-        ),
-        allowOverflow: true,
-        button: true,
-      });
-      break;
-    case "editAndDetail":
-      columns.push({
-        name: "Aksi",
-        cell: (row) => (
-          <div className="flex w-full justify-evenly">
-            <EyeIcon
-              className="w-5 h-5 text-orange-500 cursor-pointer"
-              title="Detail"
-              onClick={() => handleEdit(row)}
-            />
-            <PencilIcon
-              className="w-5 h-5 text-blue-700 cursor-pointer"
-              title="Ubah"
-              onClick={() => handleEdit(row)}
-            />
-          </div>
-        ),
-        allowOverflow: true,
-        button: true,
-      });
-      break;
-    default:
-      columns.push({
-        name: "Aksi",
-        cell: (row) => (
-          <div className="flex w-full justify-evenly">
-            <EyeIcon
-              className="w-5 h-5 text-blue-700 cursor-pointer"
-              title="Detail"
-              onClick={() => handleDetail(row)}
-            />
-            |
-            <PencilIcon
-              className="w-5 h-5 text-orange-500 cursor-pointer"
-              title="Ubah"
-              onClick={() => handleEdit(row)}
-            />
-            |
-            <TrashIcon
-              className="w-5 h-5 text-red-700 cursor-pointer"
-              title="Hapus"
-              onClick={() => handleDelete(row)}
-            />
-          </div>
-        ),
-        allowOverflow: true,
-        // button: true,
-      });
-      break;
-  }
+						<PencilIcon
+							className="w-5 h-5 text-orange-500 cursor-pointer"
+							title="Ubah"
+							onClick={() => handleEdit(row.id)}
+						/>
 
-  return (
-    <section className="w-full m-auto overflow-hidden bg-slate-100 ">
-      <DataTable
-        columns={columns}
-        data={data || []}
-        defaultSortFieldId={1}
-        pagination
-        paginationServer
-        paginationTotalRows={totalRows}
-        paginationRowsPerPageOptions={[10, 25, 50, 100]}
-        onChangeRowsPerPage={handlePerRowsChange}
-        onChangePage={handlePageChange}
-        responsive
-        highlightOnHover
-        striped
-        customStyles={customStyles}
-        progressPending={loading}
-        progressComponent={
-          <div className="flex items-center justify-center w-full h-[90vh] bg-transparent">
-            <CircularProgress />
-          </div>
-        }
-        noDataComponent={<MessageEmptyData />}
-        expandableRows
-        expandableRowExpanded={(row) => row === currentRow}
-        onRowExpandToggled={(bool, row) => handleRowClicked(row)}
-        expandOnRowClicked
-        onRowClicked={(row) => handleRowClicked(row)}
-        //   expandableRowsComponent={(row) =>renderExpandableComponent(row, tipe, handleSubmitValidator)
-        //   }
-        conditionalRowStyles={conditionalOverdue}
-      />
-    </section>
-  );
+						<TrashIcon
+							className="w-5 h-5 text-red-700 cursor-pointer"
+							title="Hapus"
+							onClick={() => handleDelete(row.id)}
+						/>
+					</div>
+				),
+				allowOverflow: true,
+				button: true,
+			});
+			break;
+	}
+
+	const SubHeader = () => {
+		return (
+			<div className="flex items-center justify-between w-full px-3 bg-bg-neumorphism">
+				<Button onClick={() => handleAdd()}>Add</Button>
+				<SearchInput />
+			</div>
+		);
+	};
+
+	return (
+		<section className="w-full px-5 py-3 overflow-hidden rounded-lg bg-bg-neumorphism shadow-neumorphism">
+			<DataTable
+				className="datatable-custom bg-bg-neummorphism"
+				columns={columns}
+				data={data || []}
+				defaultSortFieldId={1}
+				pagination
+				paginationServer
+				paginationTotalRows={totalItems}
+				paginationRowsPerPageOptions={[10, 25, 50, 100]}
+				onChangeRowsPerPage={handlePerRowsChange}
+				// onChangePage={handlePageChange}
+				responsive
+				highlightOnHover
+				striped
+				customStyles={customStyles}
+				progressPending={loading}
+				progressComponent={<MainSkeleton />}
+				noDataComponent={<MessageEmptyData />}
+				conditionalRowStyles={conditionalOverdue}
+				subHeader
+				subHeaderComponent={<SubHeader />}
+			/>
+		</section>
+	);
 };
 
 export default DataTablePagination;
