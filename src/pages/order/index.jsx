@@ -51,6 +51,7 @@ function Order() {
     getDropdownMaterial,
     getDropdownDrawer,
     getDropdownButton,
+    getDropdownCover,
   } = useSelectService();
 
   let [listData, setListData] = useState([]);
@@ -58,6 +59,7 @@ function Order() {
   let [optionsMaterials, setOptionsMaterials] = useState([]);
   let [optionsDrawer, setOptionsDrawers] = useState([]);
   let [optionsButton, setOptionsButtons] = useState([]);
+  let [optionsCover, setOptionsCovers] = useState([]);
 
   const {
     control,
@@ -153,12 +155,22 @@ function Order() {
     }
   };
 
+  const getOptionCover = async () => {
+    try {
+      const res = await getDropdownCover();
+      setOptionsCovers(res?.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     getListOrder();
     getOptionProduct();
     getOptionMaterial();
     getOptionDrawer();
     getOptionButton();
+    getOptionCover();
   }, []);
 
   return (
@@ -221,7 +233,7 @@ function Order() {
               <SelectComponent
                 name="idProduct"
                 label="Model"
-                placeholder="Pilih model"
+                placeholder="Pilih"
                 options={optionsProducts}
                 control={
                   modalProps.type == "add" || editLogo ? control : controlEdit
@@ -254,7 +266,7 @@ function Order() {
               <SelectComponent
                 name="material"
                 label="Kain"
-                placeholder="Pilih kain"
+                placeholder="Pilih"
                 options={optionsMaterials}
                 control={
                   modalProps.type == "add" || editLogo ? control : controlEdit
@@ -303,7 +315,7 @@ function Order() {
                   <SelectComponent
                     name="drawer"
                     label="Laci"
-                    placeholder="Pilih laci"
+                    placeholder="Pilih"
                     options={optionsDrawer}
                     control={
                       modalProps.type == "add" || editLogo
@@ -340,7 +352,7 @@ function Order() {
                   <SelectComponent
                     name="buttons"
                     label="Kancing"
-                    placeholder="Pilih kancing"
+                    placeholder="Pilih"
                     options={optionsButton}
                     control={
                       modalProps.type == "add" || editLogo
@@ -357,10 +369,10 @@ function Order() {
                     }
                   />
                   <SelectComponent
-                    name="type"
+                    name="cover"
                     label="Amparan"
-                    placeholder="Select type"
-                    // options={optionType}
+                    placeholder="Pilih"
+                    options={optionsCover}
                     control={
                       modalProps.type == "add" || editLogo
                         ? control

@@ -12,6 +12,7 @@ const endpoint = {
   dropdownMaterial: "/dropdown/materials",
   dropdownDrawer: "/dropdown/drawers",
   dropdownButton: "/dropdown/buttons",
+  dropdownCover:"/dropdown/covers",
 
   // Order
   order: "/orders",
