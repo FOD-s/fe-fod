@@ -9,6 +9,13 @@ import SelectComponent from "@/components/molecules/SelectCustom";
 import Datepick from "../../components/molecules/Datepick";
 import Checkbox from "@/components/molecules/Checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area"
+import {
+	Collapsible,
+	CollapsibleContent,
+	CollapsibleTrigger,
+} from "@/components/ui/collapsible"
+import { ChevronDown } from "lucide-react";
+import { ChevronUp } from "lucide-react";
 
 
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -40,6 +47,7 @@ function Order() {
 		type: "add",
 	});
 	const [startDate, setStartDate] = useState(new Date());
+	const [openCollapse, setOpenCollapse] = useState(false)
 
 	const {
 		control,
@@ -227,80 +235,90 @@ function Order() {
 								}
 							/>
 						</div>
-						<div className="grid grid-cols-2 gap-3 pb-3">
-							<label className="text-lg col-span-2">Custom</label>
-							<SelectComponent
-								name="type"
-								label="Laci"
-								placeholder="Select type"
-								// options={optionType}
-								control={
-									modalProps.type == "add" || editLogo ? control : controlEdit
-								}
-								errors={
-									modalProps.type == "add" || editLogo ? errors : errorsEdit
-								}
-								schema={
-									modalProps.type == "add" || editLogo
-										? schemaForm
-										: schemaFormEdit
-								}
-							/>
-							<InputComponent
-								name="name"
-								label="item"
-								type="text"
-								control={
-									modalProps.type == "add" || editLogo ? control : controlEdit
-								}
-								schema={
-									modalProps.type == "add" || editLogo
-										? schemaForm
-										: schemaFormEdit
-								}
-								errors={
-									modalProps.type == "add" || editLogo ? errors : errorsEdit
-								}
-							/>
-							<SelectComponent
-								name="type"
-								label="Kancing"
-								placeholder="Select type"
-								// options={optionType}
-								control={
-									modalProps.type == "add" || editLogo ? control : controlEdit
-								}
-								errors={
-									modalProps.type == "add" || editLogo ? errors : errorsEdit
-								}
-								schema={
-									modalProps.type == "add" || editLogo
-										? schemaForm
-										: schemaFormEdit
-								}
-							/>
-							<SelectComponent
-								name="type"
-								label="Amparan"
-								placeholder="Select type"
-								// options={optionType}
-								control={
-									modalProps.type == "add" || editLogo ? control : controlEdit
-								}
-								errors={
-									modalProps.type == "add" || editLogo ? errors : errorsEdit
-								}
-								schema={
-									modalProps.type == "add" || editLogo
-										? schemaForm
-										: schemaFormEdit
-								}
-							/>
-							<Checkbox label="Double Sandaran" />
-							<Checkbox label="Busa" />
-						</div>
-
-						<div className="grid grid-cols-1 gap-3 lg:grid-cols-2 lg:col-span-2">
+						<Collapsible open={openCollapse} onOpenChange={setOpenCollapse} className="h-full">
+							<span className="flex justify-between">
+								<label className="text-lg ">Custom</label>
+								<CollapsibleTrigger>
+									<Button variant="ghost" type="button">
+										{openCollapse ? <ChevronUp /> : <ChevronDown />}
+									</Button>
+								</CollapsibleTrigger>
+							</span>
+							<CollapsibleContent>
+								<div className="grid grid-cols-2 gap-3 pb-3">
+									<SelectComponent
+										name="type"
+										label="Laci"
+										placeholder="Select type"
+										// options={optionType}
+										control={
+											modalProps.type == "add" || editLogo ? control : controlEdit
+										}
+										errors={
+											modalProps.type == "add" || editLogo ? errors : errorsEdit
+										}
+										schema={
+											modalProps.type == "add" || editLogo
+												? schemaForm
+												: schemaFormEdit
+										}
+									/>
+									<InputComponent
+										name="name"
+										label="Item"
+										type="text"
+										control={
+											modalProps.type == "add" || editLogo ? control : controlEdit
+										}
+										schema={
+											modalProps.type == "add" || editLogo
+												? schemaForm
+												: schemaFormEdit
+										}
+										errors={
+											modalProps.type == "add" || editLogo ? errors : errorsEdit
+										}
+									/>
+									<SelectComponent
+										name="type"
+										label="Kancing"
+										placeholder="Select type"
+										// options={optionType}
+										control={
+											modalProps.type == "add" || editLogo ? control : controlEdit
+										}
+										errors={
+											modalProps.type == "add" || editLogo ? errors : errorsEdit
+										}
+										schema={
+											modalProps.type == "add" || editLogo
+												? schemaForm
+												: schemaFormEdit
+										}
+									/>
+									<SelectComponent
+										name="type"
+										label="Amparan"
+										placeholder="Select type"
+										// options={optionType}
+										control={
+											modalProps.type == "add" || editLogo ? control : controlEdit
+										}
+										errors={
+											modalProps.type == "add" || editLogo ? errors : errorsEdit
+										}
+										schema={
+											modalProps.type == "add" || editLogo
+												? schemaForm
+												: schemaFormEdit
+										}
+									/>
+									<Checkbox label="Double Sandaran" />
+									<Checkbox label="Busa" />
+								</div>
+							</CollapsibleContent>
+						</Collapsible>
+						<div className="grid grid-cols-1 gap-3 lg:grid-cols-2 lg:col-span-2 items-self-end">
 							<Button type="submit">Submit</Button>
 							<Button
 								variant="secondary"
