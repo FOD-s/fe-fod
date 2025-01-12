@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/collapsible"
 import { ChevronDown } from "lucide-react";
 import { ChevronUp } from "lucide-react";
+import useSelectService from "@/services/select";
 
 
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -39,15 +40,18 @@ const schemaFormEdit = yup.object().shape({
 
 function Order() {
 	const { getAllOrder } = useOrderService();
-
-	let [listData, setListData] = useState([]);
-	let [isDialogOpen, setIsDialogOpen] = useState(false);
-	let [modalProps, setModalProps] = useState({
+	const [startDate, setStartDate] = useState(new Date());
+	const [openCollapse, setOpenCollapse] = useState(false)
+	const [isDialogOpen, setIsDialogOpen] = useState(false);
+	const [modalProps, setModalProps] = useState({
 		title: "Add Order",
 		type: "add",
 	});
-	const [startDate, setStartDate] = useState(new Date());
-	const [openCollapse, setOpenCollapse] = useState(false)
+	const { getDropdownProduct, getDropdownMaterial } = useSelectService();
+
+	let [listData, setListData] = useState([]);
+	let [optionsProducts, setOptionsProducts] = useState([])
+	let [optionsMaterials, setOptionsMaterials] = useState([])
 
 	const {
 		control,
@@ -107,8 +111,28 @@ function Order() {
 		// resetEdit()
 	};
 
+	const getOptionProduct = async () => {
+		try {
+			const res = await getDropdownProduct();
+			setOptionsProducts(res?.data.data)
+		} catch (error) {
+			console.log(error)
+		}
+	}
+
+	const getOptionMaterial = async () => {
+		try {
+			const res = await getDropdownMaterial();
+			setOptionsMaterials(res?.data.data)
+		} catch (error) {
+			console.log(error)
+		}
+	}
+
 	useEffect(() => {
 		getListOrder();
+		getOptionProduct();
+		getOptionMaterial();
 	}, []);
 
 	return (
@@ -169,10 +193,10 @@ function Order() {
 						<div className="grid grid-cols-2 border-b border-gray-500 pb-3 gap-3">
 							<label className="text-lg col-span-2">Produk</label>
 							<SelectComponent
-								name="type"
+								name="idProduct"
 								label="Model"
-								placeholder="Select type"
-								// options={optionType}
+								placeholder="Pilih model"
+								options={optionsProducts}
 								control={
 									modalProps.type == "add" || editLogo ? control : controlEdit
 								}
@@ -202,10 +226,10 @@ function Order() {
 								}
 							/>
 							<SelectComponent
-								name="type"
+								name="material"
 								label="Kain"
-								placeholder="Select type"
-								// options={optionType}
+								placeholder="Pilih kain"
+								options={optionsMaterials}
 								control={
 									modalProps.type == "add" || editLogo ? control : controlEdit
 								}

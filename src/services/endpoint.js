@@ -9,6 +9,8 @@ const endpoint = {
   checkValidateToken: "/check-token",
   authMe: "/auth/me",
   profile: "/profile",
+  dropdownProduct: "/dropdown/products",
+  dropdownMaterial: "/dropdown/materials",
 
   // Order
   order: "/orders",
