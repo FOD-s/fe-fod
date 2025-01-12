@@ -2,7 +2,6 @@ const endpoint = {
   // User
   user: "/users",
 
-
   // Admin
   loginAdmin: "/login",
   logoutAdmin: "/logout",
@@ -11,11 +10,11 @@ const endpoint = {
   profile: "/profile",
   dropdownProduct: "/dropdown/products",
   dropdownMaterial: "/dropdown/materials",
-  dropdownDrawer:"/dropdown/drawers",
+  dropdownDrawer: "/dropdown/drawers",
+  dropdownButton: "/dropdown/buttons",
 
   // Order
   order: "/orders",
-
 };
 
 export default endpoint;
