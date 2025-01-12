@@ -8,355 +8,378 @@ import InputComponent from "@/components/molecules/Input";
 import SelectComponent from "@/components/molecules/SelectCustom";
 import Datepick from "../../components/molecules/Datepick";
 import Checkbox from "@/components/molecules/Checkbox";
-import { ScrollArea } from "@/components/ui/scroll-area"
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
-	Collapsible,
-	CollapsibleContent,
-	CollapsibleTrigger,
-} from "@/components/ui/collapsible"
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import { ChevronDown } from "lucide-react";
 import { ChevronUp } from "lucide-react";
 import useSelectService from "@/services/select";
-
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 
 const defaultValues = {
-	name: "",
-	type: "",
+  name: "",
+  type: "",
 };
 
 const schemaForm = yup.object().shape({
-	name: yup.string().required("Name is required"),
-	type: yup.string().required("Type is required"),
+  name: yup.string().required("Name is required"),
+  type: yup.string().required("Type is required"),
 });
 
 const schemaFormEdit = yup.object().shape({
-	name: yup.string().required("Name is required"),
-	type: yup.string().required("Type is required"),
+  name: yup.string().required("Name is required"),
+  type: yup.string().required("Type is required"),
 });
 
 function Order() {
-	const { getAllOrder } = useOrderService();
-	const [startDate, setStartDate] = useState(new Date());
-	const [openCollapse, setOpenCollapse] = useState(false)
-	const [isDialogOpen, setIsDialogOpen] = useState(false);
-	const [modalProps, setModalProps] = useState({
-		title: "Add Order",
-		type: "add",
-	});
-	const { getDropdownProduct, getDropdownMaterial } = useSelectService();
+  const { getAllOrder } = useOrderService();
+  const [startDate, setStartDate] = useState(new Date());
+  const [openCollapse, setOpenCollapse] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [modalProps, setModalProps] = useState({
+    title: "Add Order",
+    type: "add",
+  });
+  const { getDropdownProduct, getDropdownMaterial, getDropdownDrawer } =
+    useSelectService();
 
-	let [listData, setListData] = useState([]);
-	let [optionsProducts, setOptionsProducts] = useState([])
-	let [optionsMaterials, setOptionsMaterials] = useState([])
+  let [listData, setListData] = useState([]);
+  let [optionsProducts, setOptionsProducts] = useState([]);
+  let [optionsMaterials, setOptionsMaterials] = useState([]);
+  let [optionsDrawer, setOptionsDrawers] = useState([]);
 
-	const {
-		control,
-		handleSubmit,
-		formState: { errors },
-		reset,
-		watch,
-		setValue,
-	} = useForm({
-		resolver: yupResolver(schemaForm),
-		defaultValues: defaultValues,
-	});
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    watch,
+    setValue,
+  } = useForm({
+    resolver: yupResolver(schemaForm),
+    defaultValues: defaultValues,
+  });
 
-	const {
-		control: controlEdit,
-		handleSubmit: handleSubmitEdit,
-		formState: { errors: errorsEdit },
-		reset: resetEdit,
-		watch: watchEdit,
-		setValue: setValueEdit,
-	} = useForm({
-		resolver: yupResolver(schemaFormEdit),
-		defaultValues: defaultValues,
-	});
+  const {
+    control: controlEdit,
+    handleSubmit: handleSubmitEdit,
+    formState: { errors: errorsEdit },
+    reset: resetEdit,
+    watch: watchEdit,
+    setValue: setValueEdit,
+  } = useForm({
+    resolver: yupResolver(schemaFormEdit),
+    defaultValues: defaultValues,
+  });
 
-	const getListOrder = async () => {
-		try {
-			const res = await getAllOrder();
-			setListData(res?.data.data);
-		} catch (error) {
-			console.log(error);
-		}
-	};
+  const getListOrder = async () => {
+    try {
+      const res = await getAllOrder();
+      setListData(res?.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-	const renderDatatable = (data) => {
-		return (
-			<DataTablePagination
-				data={data}
-				// handlePerRowsChange={handlePerRowsChange}
-				handleAdd={handleAdd}
-			// handleDelete={handleDelete}
-			// handleEdit={handleEdit}
-			/>
-		);
-	};
+  const renderDatatable = (data) => {
+    return (
+      <DataTablePagination
+        data={data}
+        // handlePerRowsChange={handlePerRowsChange}
+        handleAdd={handleAdd}
+        // handleDelete={handleDelete}
+        // handleEdit={handleEdit}
+      />
+    );
+  };
 
-	const handleAdd = () => {
-		setIsDialogOpen(true);
-		setModalProps({
-			title: "Add Order",
-			type: "add",
-		});
-	};
+  const handleAdd = () => {
+    setIsDialogOpen(true);
+    setModalProps({
+      title: "Add Order",
+      type: "add",
+    });
+  };
 
-	const resetModal = () => {
-		reset();
-		// resetEdit()
-	};
+  const resetModal = () => {
+    reset();
+    // resetEdit()
+  };
 
-	const getOptionProduct = async () => {
-		try {
-			const res = await getDropdownProduct();
-			setOptionsProducts(res?.data.data)
-		} catch (error) {
-			console.log(error)
-		}
-	}
+  const getOptionProduct = async () => {
+    try {
+      const res = await getDropdownProduct();
+      setOptionsProducts(res?.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-	const getOptionMaterial = async () => {
-		try {
-			const res = await getDropdownMaterial();
-			setOptionsMaterials(res?.data.data)
-		} catch (error) {
-			console.log(error)
-		}
-	}
+  const getOptionMaterial = async () => {
+    try {
+      const res = await getDropdownMaterial();
+      setOptionsMaterials(res?.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-	useEffect(() => {
-		getListOrder();
-		getOptionProduct();
-		getOptionMaterial();
-	}, []);
+  const getOptionDrawer = async () => {
+    try {
+      const res = await getDropdownDrawer();
+      setOptionsDrawers(res?.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-	return (
-		<>
-			<h1>Orders</h1>
-			{listData && renderDatatable(listData)}
+  useEffect(() => {
+    getListOrder();
+    getOptionProduct();
+    getOptionMaterial();
+    getOptionDrawer();
+  }, []);
 
-			<Modal
-				isDialogOpen={isDialogOpen}
-				title={modalProps.title}
-				onOpenChange={() => setIsDialogOpen(false)}
-			>
-				<ScrollArea className="h-[calc(100vh-5rem)] md:h-[calc(100vh-10rem)] w-full rounded-md p-4">
-					<form
-						//   onSubmit={
-						//     modalProps.type == "add" || editLogo
-						//       ? handleSubmit(submitForm)
-						//       : handleSubmitEdit(submitForm)
-						//   }
-						className="flex flex-col h-full px-6 pb-6 w-full gap-3"
-					>
-						<div className="flex flex-col w-full border-b border-gray-500 pb-3 gap-2">
-							<label className="text-lg">Konsumen</label>
-							<InputComponent
-								name="name"
-								label="Nama"
-								type="text"
-								control={
-									modalProps.type == "add" || editLogo ? control : controlEdit
-								}
-								schema={
-									modalProps.type == "add" || editLogo
-										? schemaForm
-										: schemaFormEdit
-								}
-								errors={
-									modalProps.type == "add" || editLogo ? errors : errorsEdit
-								}
-							/>
-							<InputComponent
-								name="name"
-								label="Alamat"
-								type="text"
-								control={
-									modalProps.type == "add" || editLogo ? control : controlEdit
-								}
-								schema={
-									modalProps.type == "add" || editLogo
-										? schemaForm
-										: schemaFormEdit
-								}
-								errors={
-									modalProps.type == "add" || editLogo ? errors : errorsEdit
-								}
-							/>
-							<Datepick label={"Tanggal Pengiriman"} />
-						</div>
-						<div className="grid grid-cols-2 border-b border-gray-500 pb-3 gap-3">
-							<label className="text-lg col-span-2">Produk</label>
-							<SelectComponent
-								name="idProduct"
-								label="Model"
-								placeholder="Pilih model"
-								options={optionsProducts}
-								control={
-									modalProps.type == "add" || editLogo ? control : controlEdit
-								}
-								errors={
-									modalProps.type == "add" || editLogo ? errors : errorsEdit
-								}
-								schema={
-									modalProps.type == "add" || editLogo
-										? schemaForm
-										: schemaFormEdit
-								}
-							/>
-							<InputComponent
-								name="name"
-								label="Ukuran"
-								type="text"
-								control={
-									modalProps.type == "add" || editLogo ? control : controlEdit
-								}
-								schema={
-									modalProps.type == "add" || editLogo
-										? schemaForm
-										: schemaFormEdit
-								}
-								errors={
-									modalProps.type == "add" || editLogo ? errors : errorsEdit
-								}
-							/>
-							<SelectComponent
-								name="material"
-								label="Kain"
-								placeholder="Pilih kain"
-								options={optionsMaterials}
-								control={
-									modalProps.type == "add" || editLogo ? control : controlEdit
-								}
-								errors={
-									modalProps.type == "add" || editLogo ? errors : errorsEdit
-								}
-								schema={
-									modalProps.type == "add" || editLogo
-										? schemaForm
-										: schemaFormEdit
-								}
-							/>
-							<InputComponent
-								name="name"
-								label="Warna"
-								type="text"
-								control={
-									modalProps.type == "add" || editLogo ? control : controlEdit
-								}
-								schema={
-									modalProps.type == "add" || editLogo
-										? schemaForm
-										: schemaFormEdit
-								}
-								errors={
-									modalProps.type == "add" || editLogo ? errors : errorsEdit
-								}
-							/>
-						</div>
-						<Collapsible open={openCollapse} onOpenChange={setOpenCollapse} className="h-full">
-							<span className="flex justify-between">
-								<label className="text-lg ">Custom</label>
-								<CollapsibleTrigger>
-									<Button variant="ghost" type="button">
-										{openCollapse ? <ChevronUp /> : <ChevronDown />}
-									</Button>
-								</CollapsibleTrigger>
-							</span>
-							<CollapsibleContent>
-								<div className="grid grid-cols-2 gap-3 pb-3">
-									<SelectComponent
-										name="type"
-										label="Laci"
-										placeholder="Select type"
-										// options={optionType}
-										control={
-											modalProps.type == "add" || editLogo ? control : controlEdit
-										}
-										errors={
-											modalProps.type == "add" || editLogo ? errors : errorsEdit
-										}
-										schema={
-											modalProps.type == "add" || editLogo
-												? schemaForm
-												: schemaFormEdit
-										}
-									/>
-									<InputComponent
-										name="name"
-										label="Item"
-										type="text"
-										control={
-											modalProps.type == "add" || editLogo ? control : controlEdit
-										}
-										schema={
-											modalProps.type == "add" || editLogo
-												? schemaForm
-												: schemaFormEdit
-										}
-										errors={
-											modalProps.type == "add" || editLogo ? errors : errorsEdit
-										}
-									/>
-									<SelectComponent
-										name="type"
-										label="Kancing"
-										placeholder="Select type"
-										// options={optionType}
-										control={
-											modalProps.type == "add" || editLogo ? control : controlEdit
-										}
-										errors={
-											modalProps.type == "add" || editLogo ? errors : errorsEdit
-										}
-										schema={
-											modalProps.type == "add" || editLogo
-												? schemaForm
-												: schemaFormEdit
-										}
-									/>
-									<SelectComponent
-										name="type"
-										label="Amparan"
-										placeholder="Select type"
-										// options={optionType}
-										control={
-											modalProps.type == "add" || editLogo ? control : controlEdit
-										}
-										errors={
-											modalProps.type == "add" || editLogo ? errors : errorsEdit
-										}
-										schema={
-											modalProps.type == "add" || editLogo
-												? schemaForm
-												: schemaFormEdit
-										}
-									/>
-									<Checkbox label="Double Sandaran" />
-									<Checkbox label="Busa" />
-								</div>
-							</CollapsibleContent>
-						</Collapsible>
-						<div className="grid grid-cols-1 gap-3 lg:grid-cols-2 lg:col-span-2 items-self-end">
-							<Button type="submit">Submit</Button>
-							<Button
-								variant="secondary"
-								type="button"
-								onClick={() => resetModal()}
-							>
-								Reset
-							</Button>
-						</div>
-					</form>
-				</ScrollArea>
-			</Modal>
-		</>
-	);
+  return (
+    <>
+      <h1>Orders</h1>
+      {listData && renderDatatable(listData)}
+
+      <Modal
+        isDialogOpen={isDialogOpen}
+        title={modalProps.title}
+        onOpenChange={() => setIsDialogOpen(false)}
+      >
+        <ScrollArea className="h-[calc(100vh-5rem)] md:h-[calc(100vh-10rem)] w-full rounded-md p-4">
+          <form
+            //   onSubmit={
+            //     modalProps.type == "add" || editLogo
+            //       ? handleSubmit(submitForm)
+            //       : handleSubmitEdit(submitForm)
+            //   }
+            className="flex flex-col h-full px-6 pb-6 w-full gap-3"
+          >
+            <div className="flex flex-col w-full border-b border-gray-500 pb-3 gap-2">
+              <label className="text-lg">Konsumen</label>
+              <InputComponent
+                name="name"
+                label="Nama"
+                type="text"
+                control={
+                  modalProps.type == "add" || editLogo ? control : controlEdit
+                }
+                schema={
+                  modalProps.type == "add" || editLogo
+                    ? schemaForm
+                    : schemaFormEdit
+                }
+                errors={
+                  modalProps.type == "add" || editLogo ? errors : errorsEdit
+                }
+              />
+              <InputComponent
+                name="name"
+                label="Alamat"
+                type="text"
+                control={
+                  modalProps.type == "add" || editLogo ? control : controlEdit
+                }
+                schema={
+                  modalProps.type == "add" || editLogo
+                    ? schemaForm
+                    : schemaFormEdit
+                }
+                errors={
+                  modalProps.type == "add" || editLogo ? errors : errorsEdit
+                }
+              />
+              <Datepick label={"Tanggal Pengiriman"} />
+            </div>
+            <div className="grid grid-cols-2 border-b border-gray-500 pb-3 gap-3">
+              <label className="text-lg col-span-2">Produk</label>
+              <SelectComponent
+                name="idProduct"
+                label="Model"
+                placeholder="Pilih model"
+                options={optionsProducts}
+                control={
+                  modalProps.type == "add" || editLogo ? control : controlEdit
+                }
+                errors={
+                  modalProps.type == "add" || editLogo ? errors : errorsEdit
+                }
+                schema={
+                  modalProps.type == "add" || editLogo
+                    ? schemaForm
+                    : schemaFormEdit
+                }
+              />
+              <InputComponent
+                name="name"
+                label="Ukuran"
+                type="text"
+                control={
+                  modalProps.type == "add" || editLogo ? control : controlEdit
+                }
+                schema={
+                  modalProps.type == "add" || editLogo
+                    ? schemaForm
+                    : schemaFormEdit
+                }
+                errors={
+                  modalProps.type == "add" || editLogo ? errors : errorsEdit
+                }
+              />
+              <SelectComponent
+                name="material"
+                label="Kain"
+                placeholder="Pilih kain"
+                options={optionsMaterials}
+                control={
+                  modalProps.type == "add" || editLogo ? control : controlEdit
+                }
+                errors={
+                  modalProps.type == "add" || editLogo ? errors : errorsEdit
+                }
+                schema={
+                  modalProps.type == "add" || editLogo
+                    ? schemaForm
+                    : schemaFormEdit
+                }
+              />
+              <InputComponent
+                name="name"
+                label="Warna"
+                type="text"
+                control={
+                  modalProps.type == "add" || editLogo ? control : controlEdit
+                }
+                schema={
+                  modalProps.type == "add" || editLogo
+                    ? schemaForm
+                    : schemaFormEdit
+                }
+                errors={
+                  modalProps.type == "add" || editLogo ? errors : errorsEdit
+                }
+              />
+            </div>
+            <Collapsible
+              open={openCollapse}
+              onOpenChange={setOpenCollapse}
+              className="h-full"
+            >
+              <span className="flex justify-between">
+                <label className="text-lg ">Custom</label>
+                <CollapsibleTrigger>
+                  <Button variant="ghost" type="button">
+                    {openCollapse ? <ChevronUp /> : <ChevronDown />}
+                  </Button>
+                </CollapsibleTrigger>
+              </span>
+              <CollapsibleContent>
+                <div className="grid grid-cols-2 gap-3 pb-3">
+                  <SelectComponent
+                    name="drawer"
+                    label="Laci"
+                    placeholder="Pilih Laci"
+                    options={optionsDrawer}
+                    control={
+                      modalProps.type == "add" || editLogo
+                        ? control
+                        : controlEdit
+                    }
+                    errors={
+                      modalProps.type == "add" || editLogo ? errors : errorsEdit
+                    }
+                    schema={
+                      modalProps.type == "add" || editLogo
+                        ? schemaForm
+                        : schemaFormEdit
+                    }
+                  />
+                  <InputComponent
+                    name="name"
+                    label="Item"
+                    type="text"
+                    control={
+                      modalProps.type == "add" || editLogo
+                        ? control
+                        : controlEdit
+                    }
+                    schema={
+                      modalProps.type == "add" || editLogo
+                        ? schemaForm
+                        : schemaFormEdit
+                    }
+                    errors={
+                      modalProps.type == "add" || editLogo ? errors : errorsEdit
+                    }
+                  />
+                  <SelectComponent
+                    name="type"
+                    label="Kancing"
+                    placeholder="Select type"
+                    // options={optionType}
+                    control={
+                      modalProps.type == "add" || editLogo
+                        ? control
+                        : controlEdit
+                    }
+                    errors={
+                      modalProps.type == "add" || editLogo ? errors : errorsEdit
+                    }
+                    schema={
+                      modalProps.type == "add" || editLogo
+                        ? schemaForm
+                        : schemaFormEdit
+                    }
+                  />
+                  <SelectComponent
+                    name="type"
+                    label="Amparan"
+                    placeholder="Select type"
+                    // options={optionType}
+                    control={
+                      modalProps.type == "add" || editLogo
+                        ? control
+                        : controlEdit
+                    }
+                    errors={
+                      modalProps.type == "add" || editLogo ? errors : errorsEdit
+                    }
+                    schema={
+                      modalProps.type == "add" || editLogo
+                        ? schemaForm
+                        : schemaFormEdit
+                    }
+                  />
+                  <Checkbox label="Double Sandaran" />
+                  <Checkbox label="Busa" />
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
+            <div className="grid grid-cols-1 gap-3 lg:grid-cols-2 lg:col-span-2 items-self-end">
+              <Button type="submit">Submit</Button>
+              <Button
+                variant="secondary"
+                type="button"
+                onClick={() => resetModal()}
+              >
+                Reset
+              </Button>
+            </div>
+          </form>
+        </ScrollArea>
+      </Modal>
+    </>
+  );
 }
 
 export default WithAuth(Order);

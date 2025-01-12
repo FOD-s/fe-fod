@@ -11,6 +11,7 @@ const endpoint = {
   profile: "/profile",
   dropdownProduct: "/dropdown/products",
   dropdownMaterial: "/dropdown/materials",
+  dropdownDrawer:"/dropdown/drawers",
 
   // Order
   order: "/orders",
