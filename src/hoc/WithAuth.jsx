@@ -9,41 +9,31 @@ import { useNavigate } from "react-router-dom";
 
 const WithAuth = (WrappedComponent) => {
 	return (props) => {
-		const { checkValidateToken, getProfile } = useAuthService();
+		const { authMe } = useAuthService();
 		const token = useSelector((state) => state.user.token);
 		const navigate = useNavigate();
 		const toast = useToast();
 		const dispatch = useDispatch();
 
 		useEffect(() => {
-			const getProfil = async () => {
-				console.log("getProfil start"); 
-				
+			const getProfile = async () => {
 				try {
-					const res = await getProfile();
-					return dispatch(updateUser(res?.data.data));
-				} catch (err) {
-					return console.error(err);
-				}
-			};
-			const validateToken = async (token) => {
-				try {
-					const res = await checkValidateToken({ token });
+					const res = await authMe();
 					if (res.status !== 200) {
 						return toast({
 							variant: "destructive",
 							description: "Sesi kadaluwarsa, silahkan login kembali",
 						});
 					}
-					getProfil();
-				} catch (error) {
+					return dispatch(updateUser(res?.data.data));
+				} catch (err) {
 					dispatch(updateToken(""));
 					navigate("/login");
 				}
 			};
 
 			if (token) {
-				validateToken(token);
+				getProfile();
 			} else {
 				navigate("/login");
 			}
