@@ -16,6 +16,8 @@ import { ChevronDown, ChevronUp, ChevronsLeft } from "lucide-react";
 import { useEffect, useState } from "react";
 import Datepick from "../../components/molecules/Datepick";
 import { formatRupiah } from "@/utils/formatRupiah";
+import { useSelector } from "react-redux";
+import {DATA_USER} from "@/features/auth/loginSlice.js"
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
@@ -64,6 +66,7 @@ function Order() {
 	} = useSelectService();
 	const { getModelPrice } = useModelPriceService();
 	const [pageForm, setPageForm] = useState(true);
+  const user = useSelector(DATA_USER);
 
 	let [listData, setListData] = useState([]);
 	let [optionsProducts, setOptionsProducts] = useState([]);
@@ -75,6 +78,7 @@ function Order() {
 	let [productPrice, setProductPrice] = useState(0);
 	let [customPrice, setCustomPrice] = useState(0);
 	let [totalPrice, setTotalPrice] = useState(0);
+
 
 	const {
 		control,
@@ -135,6 +139,8 @@ function Order() {
 
 	const submitForm = (data) => {
 		console.log(data);
+    console.log(user);
+    
 	};
 
 	const resetModal = () => {
@@ -376,41 +382,21 @@ function Order() {
 											label="Laci"
 											placeholder="Pilih"
 											options={optionsDrawer}
-											control={
-												modalProps.type == "add" || editLogo
-													? control
-													: controlEdit
-											}
-											errors={
-												modalProps.type == "add" || editLogo
-													? errors
-													: errorsEdit
-											}
+											control={modalProps.type == "add" ? control : controlEdit}
+											errors={modalProps.type == "add" ? errors : errorsEdit}
 											schema={
-												modalProps.type == "add" || editLogo
-													? schemaForm
-													: schemaFormEdit
+												modalProps.type == "add" ? schemaForm : schemaFormEdit
 											}
 										/>
 										<InputComponent
 											name="item"
 											label="Item"
 											type="number "
-											control={
-												modalProps.type == "add" || editLogo
-													? control
-													: controlEdit
-											}
+											control={modalProps.type == "add" ? control : controlEdit}
 											schema={
-												modalProps.type == "add" || editLogo
-													? schemaForm
-													: schemaFormEdit
+												modalProps.type == "add" ? schemaForm : schemaFormEdit
 											}
-											errors={
-												modalProps.type == "add" || editLogo
-													? errors
-													: errorsEdit
-											}
+											errors={modalProps.type == "add" ? errors : errorsEdit}
 										/>
 										<SelectComponent
 											name="buttons"
@@ -459,6 +445,14 @@ function Order() {
 									</div>
 								</CollapsibleContent>
 							</Collapsible>
+							<InputComponent
+								name="note"
+								label="Note"
+								type="text"
+								control={modalProps.type == "add" ? control : controlEdit}
+								schema={modalProps.type == "add" ? schemaForm : schemaFormEdit}
+								errors={modalProps.type == "add" ? errors : errorsEdit}
+							/>
 							<div className="grid grid-cols-1 gap-3 lg:grid-cols-2 lg:col-span-2 items-self-end">
 								<Button type="submit">Submit</Button>
 								<Button
