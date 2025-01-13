@@ -17,7 +17,7 @@ import { useEffect, useState } from "react";
 import Datepick from "../../components/molecules/Datepick";
 import { formatRupiah } from "@/utils/formatRupiah";
 import { useSelector } from "react-redux";
-import {DATA_USER} from "@/features/auth/loginSlice.js"
+import { DATA_USER } from "@/features/auth/loginSlice.js";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
@@ -49,7 +49,7 @@ const schemaFormEdit = yup.object().shape({
 
 function Order() {
 	const { getAllOrder } = useOrderService();
-	const [startDate, setStartDate] = useState(new Date());
+	const [deliveryDate, setDeliveryDate] = useState(new Date());
 	const [openCollapse, setOpenCollapse] = useState(false);
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const [modalProps, setModalProps] = useState({
@@ -66,7 +66,7 @@ function Order() {
 	} = useSelectService();
 	const { getModelPrice } = useModelPriceService();
 	const [pageForm, setPageForm] = useState(true);
-  const user = useSelector(DATA_USER);
+	const user = useSelector(DATA_USER);
 
 	let [listData, setListData] = useState([]);
 	let [optionsProducts, setOptionsProducts] = useState([]);
@@ -78,7 +78,6 @@ function Order() {
 	let [productPrice, setProductPrice] = useState(0);
 	let [customPrice, setCustomPrice] = useState(0);
 	let [totalPrice, setTotalPrice] = useState(0);
-
 
 	const {
 		control,
@@ -138,10 +137,29 @@ function Order() {
 	};
 
 	const submitForm = (data) => {
-		console.log(data);
-    console.log(user);
-    
+		data.userId = user.id;
+		data.deliveryDate = deliveryDate;
+		sendDataOrder(data);
 	};
+
+  const sendDataOrder = async (data) => {
+    try {
+      const res = await createOrder(data);
+      if (res?.status !== 200) {
+        return toast({
+          variant: "destructive",
+          description: res.data.message,
+        });
+      }
+      toast({
+        description: res.data.message,
+      });
+      setIsDialogOpen(false);
+      getListOrder();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
 	const resetModal = () => {
 		reset();
@@ -201,6 +219,11 @@ function Order() {
 			console.log(error);
 		}
 	};
+
+  const handleChangeDeliveryDate = (date) => {
+    const formattedDate = date.toLocaleDateString("en-CA"); // YYYY-MM-DD
+		setDeliveryDate(formattedDate);
+  };
 
 	useEffect(() => {
 		getListOrder();
@@ -280,7 +303,11 @@ function Order() {
 									}
 									errors={modalProps.type == "add" ? errors : errorsEdit}
 								/>
-								<Datepick label={"Tanggal Pengiriman"} />
+								<Datepick
+									label={"Tanggal Pengiriman"}
+									date={deliveryDate}
+									onChange={handleChangeDeliveryDate}
+								/>
 							</div>
 							<div className="grid grid-cols-2 gap-3 pb-6 border-b border-gray-500">
 								<h2 className="col-span-2 font-bold">Produk</h2>

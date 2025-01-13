@@ -4,7 +4,7 @@ import DatePicker from "react-datepicker";
 import { Button } from "@/components/ui/button.tsx"
 
 
-export default function Datepick({ label }) {
+export default function Datepick({ label,date,onChange }) {
   const CustomInput = forwardRef(
     ({ value, onClick, className }, ref) => (
       <Button className={className} onClick={onClick} ref={ref} type="button" variant="ghost">
@@ -12,14 +12,13 @@ export default function Datepick({ label }) {
       </Button>
     ),
   );
-  const [startDate, setStartDate] = useState(new Date());
 
   return (
     <div className="flex items-center gap-3">
-      <Label className="font-bold space-y-1">{label}</Label>
+      <Label className="space-y-1 font-bold">{label}</Label>
       <DatePicker
-        selected={startDate}
-        onChange={(date) => setStartDate(date)}
+        selected={date}
+        onChange={(date) => onChange(date)}
         customInput={<CustomInput />}
       />
     </div>
