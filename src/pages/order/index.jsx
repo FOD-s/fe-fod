@@ -11,27 +11,38 @@ import {
 import WithAuth from "@/hoc/WithAuth";
 import useOrderService from "@/services/order";
 import useSelectService from "@/services/select";
+import useModelPriceService from "../../services/model";
 import { ChevronDown, ChevronUp, ChevronsLeft } from "lucide-react";
 import { useEffect, useState } from "react";
 import Datepick from "../../components/molecules/Datepick";
+import { formatRupiah } from "@/utils/formatRupiah";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 
 const defaultValues = {
-	name: "",
-	type: "",
+	client: "",
+	deliveryAddress: "",
+	idProduct: "",
 };
 
 const schemaForm = yup.object().shape({
-	name: yup.string().required("Name is required"),
-	type: yup.string().required("Type is required"),
+	client: yup.string().required("Konsumen harus diisi"),
+	deliveryAddress: yup.string().required("Alamat harus diisi"),
+	idProduct: yup.string().required("Produk harus dipilih"),
+	size: yup.string().required("Ukuran harus diisi"),
+	material: yup.string().required("Kain harus dipilih"),
+	color: yup.string().required("Warna harus diisi"),
 });
 
 const schemaFormEdit = yup.object().shape({
-	name: yup.string().required("Name is required"),
-	type: yup.string().required("Type is required"),
+	client: yup.string().required("Konsumen harus diisi"),
+	deliveryAddress: yup.string().required("Alamat harus diisi"),
+	idProduct: yup.string().required("Produk harus dipilih"),
+	size: yup.string().required("Ukuran harus diisi"),
+	material: yup.string().required("Kain harus dipilih"),
+	color: yup.string().required("Warna harus diisi"),
 });
 
 function Order() {
@@ -49,7 +60,9 @@ function Order() {
 		getDropdownDrawer,
 		getDropdownButton,
 		getDropdownCover,
+		getDropdownSize,
 	} = useSelectService();
+	const { getModelPrice } = useModelPriceService();
 	const [pageForm, setPageForm] = useState(true);
 
 	let [listData, setListData] = useState([]);
@@ -58,6 +71,7 @@ function Order() {
 	let [optionsDrawer, setOptionsDrawers] = useState([]);
 	let [optionsButton, setOptionsButtons] = useState([]);
 	let [optionsCover, setOptionsCovers] = useState([]);
+	let [optionsSize, setOptionsSizes] = useState([]);
 	let [productPrice, setProductPrice] = useState(0);
 	let [customPrice, setCustomPrice] = useState(0);
 	let [totalPrice, setTotalPrice] = useState(0);
@@ -73,6 +87,9 @@ function Order() {
 		resolver: yupResolver(schemaForm),
 		defaultValues: defaultValues,
 	});
+
+	const idProduct = watch("idProduct");
+	const size = watch("size");
 
 	const {
 		control: controlEdit,
@@ -109,11 +126,15 @@ function Order() {
 
 	const handleAdd = () => {
 		// setIsDialogOpen(true);
-		// setModalProps({
-		// 	title: "Add Order",
-		// 	type: "add",
-		// });
+		setModalProps({
+			// title: "Add Order",
+			type: "add",
+		});
 		setPageForm(true);
+	};
+
+	const submitForm = (data) => {
+		console.log(data);
 	};
 
 	const resetModal = () => {
@@ -166,6 +187,15 @@ function Order() {
 		}
 	};
 
+	const getOptionSize = async () => {
+		try {
+			const res = await getDropdownSize();
+			setOptionsSizes(res?.data.data);
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
 	useEffect(() => {
 		getListOrder();
 		getOptionProduct();
@@ -173,11 +203,30 @@ function Order() {
 		getOptionDrawer();
 		getOptionButton();
 		getOptionCover();
+		getOptionSize();
 	}, []);
 
 	useEffect(() => {
 		console.log(pageForm);
 	}, [pageForm]);
+
+	useEffect(() => {
+		const getPriceProduct = async (idProduct, size, type = "BASIC") => {
+			try {
+				const res = await getModelPrice(idProduct, size, type);
+				setProductPrice(res?.data.price);
+			} catch (error) {
+				console.log(error);
+			}
+		};
+		if (idProduct && size) {
+			getPriceProduct(idProduct, size);
+		}
+	}, [idProduct, size]);
+
+	useEffect(() => {
+		setTotalPrice(parseInt(productPrice) + parseInt(customPrice));
+	}, [customPrice, productPrice]);
 
 	return (
 		<>
@@ -189,53 +238,41 @@ function Order() {
 			) : (
 				<div className="grid gap-3">
 					<div className="flex items-center justify-between">
-						<h1>Add Order</h1>
+						<h1>Buat Order</h1>
 						<Button variant="ghost" onClick={() => setPageForm(false)}>
 							<ChevronsLeft /> Kembali
 						</Button>
 					</div>
 					<div className="grid grid-cols-3 p-4 rounded-md shadow-neumorphism">
 						<form
-							//   onSubmit={
-							//     modalProps.type == "add" || editLogo
-							//       ? handleSubmit(submitForm)
-							//       : handleSubmitEdit(submitForm)
-							//   }
+							onSubmit={
+								modalProps.type == "add"
+									? handleSubmit(submitForm)
+									: handleSubmitEdit(submitForm)
+							}
 							className="flex flex-col w-full h-full col-span-2 gap-3 px-6 pb-6"
 						>
 							<div className="flex flex-col w-full gap-2 pb-3 border-b border-gray-500">
 								<h2 className="font-bold">Konsumen</h2>
 								<InputComponent
-									name="name"
+									name="client"
 									label="Nama"
 									type="text"
-									control={
-										modalProps.type == "add" || editLogo ? control : controlEdit
-									}
+									control={modalProps.type == "add" ? control : controlEdit}
 									schema={
-										modalProps.type == "add" || editLogo
-											? schemaForm
-											: schemaFormEdit
+										modalProps.type == "add" ? schemaForm : schemaFormEdit
 									}
-									errors={
-										modalProps.type == "add" || editLogo ? errors : errorsEdit
-									}
+									errors={modalProps.type == "add" ? errors : errorsEdit}
 								/>
 								<InputComponent
-									name="name"
+									name="deliveryAddress"
 									label="Alamat"
 									type="text"
-									control={
-										modalProps.type == "add" || editLogo ? control : controlEdit
-									}
+									control={modalProps.type == "add" ? control : controlEdit}
 									schema={
-										modalProps.type == "add" || editLogo
-											? schemaForm
-											: schemaFormEdit
+										modalProps.type == "add" ? schemaForm : schemaFormEdit
 									}
-									errors={
-										modalProps.type == "add" || editLogo ? errors : errorsEdit
-									}
+									errors={modalProps.type == "add" ? errors : errorsEdit}
 								/>
 								<Datepick label={"Tanggal Pengiriman"} />
 							</div>
@@ -258,8 +295,8 @@ function Order() {
 											: schemaFormEdit
 									}
 								/>
-								<InputComponent
-									name="name"
+								{/* <InputComponent
+									name="size"
 									label="Ukuran"
 									type="text"
 									control={
@@ -272,6 +309,17 @@ function Order() {
 									}
 									errors={
 										modalProps.type == "add" || editLogo ? errors : errorsEdit
+									}
+								/> */}
+								<SelectComponent
+									name="size"
+									label="Ukuran"
+									placeholder="Pilih"
+									options={optionsSize}
+									control={modalProps.type == "add" ? control : controlEdit}
+									errors={modalProps.type == "add" ? errors : errorsEdit}
+									schema={
+										modalProps.type == "add" ? schemaForm : schemaFormEdit
 									}
 								/>
 								<SelectComponent
@@ -292,7 +340,7 @@ function Order() {
 									}
 								/>
 								<InputComponent
-									name="name"
+									name="color"
 									label="Warna"
 									type="text"
 									control={
@@ -429,7 +477,7 @@ function Order() {
 										<h2>Harga Pokok</h2>
 									</td>
 									<td className="text-right">
-										<h2>Rp {productPrice}</h2>
+										<h2>{formatRupiah(productPrice)}</h2>
 									</td>
 								</tr>
 								<tr className="border-b border-gray-500">
@@ -437,7 +485,7 @@ function Order() {
 										<h2>Harga Custom</h2>
 									</td>
 									<td className="text-right">
-										<h2>Rp {customPrice}</h2>
+										<h2>{formatRupiah(customPrice)}</h2>
 									</td>
 								</tr>
 								<tr className="font-bold">
@@ -445,7 +493,7 @@ function Order() {
 										<h1>Total</h1>
 									</td>
 									<td className="text-right">
-										<h2>Rp {totalPrice}</h2>
+										<h2>{formatRupiah(totalPrice)}</h2>
 									</td>
 								</tr>
 							</table>

@@ -13,9 +13,13 @@ const endpoint = {
   dropdownDrawer: "/dropdown/drawers",
   dropdownButton: "/dropdown/buttons",
   dropdownCover:"/dropdown/covers",
+  dropdownSize:"/dropdown/sizes",
 
   // Order
   order: "/orders",
+
+  // Model
+  model: "/models",
 };
 
 export default endpoint;
