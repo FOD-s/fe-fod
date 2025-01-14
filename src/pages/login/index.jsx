@@ -72,7 +72,7 @@ const Login = () => {
 								id="email"
 								className="text-sm font-medium leading-none text-gray-800"
 							>
-								email
+								Email
 							</label>
 							<input
 								aria-labelledby="email"

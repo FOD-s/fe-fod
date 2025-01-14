@@ -91,6 +91,7 @@ function Order() {
 		handleSubmit,
 		formState: { errors },
 		reset,
+		resetField,
 		watch,
 		setValue,
 	} = useForm({
@@ -254,6 +255,13 @@ function Order() {
 	}, [pageForm]);
 
 	useEffect(() => {
+		if (idProduct) {
+			resetField("size");
+			// getPriceProduct(idProduct, size);
+		}
+	}, [idProduct]);
+
+	useEffect(() => {
 		const getPriceProduct = async (idProduct, size, type = "BASIC") => {
 			try {
 				const res = await getModelPrice(idProduct, size, type);
@@ -262,10 +270,10 @@ function Order() {
 				console.log(error);
 			}
 		};
-		if (idProduct && size) {
+		if (size) {
 			getPriceProduct(idProduct, size);
 		}
-	}, [idProduct, size]);
+	}, [size]);
 
 	useEffect(() => {
 		setTotalPrice(parseInt(productPrice) + parseInt(customPrice));
@@ -505,7 +513,7 @@ function Order() {
 								</Button>
 							</div>
 						</form>
-						<div className="flex flex-col gap-3 p-6">
+						<div className="flex flex-col p-6">
 							<table>
 								<tr>
 									<td>
