@@ -18,6 +18,7 @@ import Datepick from "../../components/molecules/Datepick";
 import { formatRupiah } from "@/utils/formatRupiah";
 import { useSelector } from "react-redux";
 import { DATA_USER } from "@/features/auth/loginSlice.js";
+import { useToast } from "@/hooks/use-toast";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
@@ -48,7 +49,7 @@ const schemaFormEdit = yup.object().shape({
 });
 
 function Order() {
-	const { getAllOrder } = useOrderService();
+	const { getAllOrder, createOrder } = useOrderService();
 	const [deliveryDate, setDeliveryDate] = useState(new Date());
 	const [openCollapse, setOpenCollapse] = useState(false);
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -67,6 +68,7 @@ function Order() {
 	const { getModelPrice } = useModelPriceService();
 	const [pageForm, setPageForm] = useState(true);
 	const user = useSelector(DATA_USER);
+	const { toast } = useToast();
 
 	let [listData, setListData] = useState([]);
 	let [optionsProducts, setOptionsProducts] = useState([]);
@@ -139,27 +141,30 @@ function Order() {
 	const submitForm = (data) => {
 		data.userId = user.id;
 		data.deliveryDate = deliveryDate;
+    data.type = "BASIC";
+    data.sumPrice = parseInt(productPrice) + parseInt(customPrice);
+    data.finalPrice = parseInt(productPrice) + parseInt(customPrice);
 		sendDataOrder(data);
 	};
 
-  const sendDataOrder = async (data) => {
-    try {
-      const res = await createOrder(data);
-      if (res?.status !== 200) {
-        return toast({
-          variant: "destructive",
-          description: res.data.message,
-        });
-      }
-      toast({
-        description: res.data.message,
-      });
-      setIsDialogOpen(false);
-      getListOrder();
-    } catch (error) {
-      console.log(error);
-    }
-  };
+	const sendDataOrder = async (data) => {
+		try {
+			const res = await createOrder(data);
+			if (res?.status !== 200) {
+				return toast({
+					variant: "destructive",
+					description: res.data.message,
+				});
+			}
+			toast({
+				description: res.data.message,
+			});
+			setIsDialogOpen(false);
+			getListOrder();
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	const resetModal = () => {
 		reset();
@@ -220,10 +225,10 @@ function Order() {
 		}
 	};
 
-  const handleChangeDeliveryDate = (date) => {
-    const formattedDate = date.toLocaleDateString("en-CA"); // YYYY-MM-DD
+	const handleChangeDeliveryDate = (date) => {
+		const formattedDate = date.toLocaleDateString("en-CA"); // YYYY-MM-DD
 		setDeliveryDate(formattedDate);
-  };
+	};
 
 	useEffect(() => {
 		getListOrder();
