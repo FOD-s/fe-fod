@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import MainSkeleton from "../atoms/MainSkeleton";
 import MessageEmptyData from "../atoms/MessageEmptyData";
+import { formatDateYMD } from "@/utils/formatDate";
 
 // custom style header
 let customStyles = {
@@ -111,12 +112,19 @@ const DataTablePagination = ({
 						sortable: true,
 					});
 					break;
+				case "productName":
+					columns.push({
+						name: "Model",
+						selector: (row) => row.productName,
+						sortable: true,
+					});
+					break;
 				case "status":
 					columns.push({
 						name: "Status",
 						selector: (row) => row.status,
 						// sortable: true,
-            center: true,
+						center: true,
 					});
 					break;
 				case "validator":
@@ -124,15 +132,65 @@ const DataTablePagination = ({
 						name: "Validator",
 						selector: (row) => row.validator,
 						// sortable: true,
-            center: true,
+						center: true,
 					});
 					break;
-				case "dateOrder":
+				case "type":
+					columns.push({
+						name: "Tipe",
+						selector: (row) => row.type,
+						// sortable: true,
+						center: true,
+					});
+					break;
+				case "size":
+					columns.push({
+						name: "Ukuran",
+						selector: (row) => row.size,
+						// sortable: true,
+						center: true,
+					});
+					break;
+				case "material":
+					columns.push({
+						name: "Kain",
+						selector: (row) => row.material,
+						// sortable: true,
+						center: true,
+					});
+					break;
+				case "client":
+					columns.push({
+						name: "Konsumen",
+						selector: (row) => row.client,
+						// sortable: true,
+						center: true,
+					});
+					break;
+				case "orderDate":
 					columns.push({
 						name: "Tanggal Order",
-						selector: (row) => row.dateOrder,
+						selector: (row) => formatDateYMD(row.orderDate),
 						// sortable: true,
-            center: true,
+						center: true,
+						grow: 2,
+					});
+					break;
+				case "deliveryDate":
+					columns.push({
+						name: "Tanggal Pengiriman",
+						selector: (row) => row.deliveryDate,
+						// sortable: true,
+						center: true,
+						grow: 2,
+					});
+					break;
+				case "note":
+					columns.push({
+						name: "Catatan",
+						selector: (row) => row.note || "-",
+						// sortable: true,
+						center: true,
 					});
 					break;
 				default:

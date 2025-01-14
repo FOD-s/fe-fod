@@ -28,6 +28,10 @@ const defaultValues = {
 	client: "",
 	deliveryAddress: "",
 	idProduct: "",
+	size: "",
+	material: "",
+	color: "",
+	note: "",
 };
 
 const schemaForm = yup.object().shape({
@@ -37,6 +41,7 @@ const schemaForm = yup.object().shape({
 	size: yup.string().required("Ukuran harus diisi"),
 	material: yup.string().required("Kain harus dipilih"),
 	color: yup.string().required("Warna harus diisi"),
+	note: yup.string().nullable(),
 });
 
 const schemaFormEdit = yup.object().shape({
@@ -46,13 +51,13 @@ const schemaFormEdit = yup.object().shape({
 	size: yup.string().required("Ukuran harus diisi"),
 	material: yup.string().required("Kain harus dipilih"),
 	color: yup.string().required("Warna harus diisi"),
+	note: yup.string().nullable(),
 });
 
 function Order() {
 	const { getAllOrder, createOrder } = useOrderService();
 	const [deliveryDate, setDeliveryDate] = useState(new Date());
 	const [openCollapse, setOpenCollapse] = useState(false);
-	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const [modalProps, setModalProps] = useState({
 		title: "Add Order",
 		type: "add",
@@ -66,7 +71,7 @@ function Order() {
 		getDropdownSize,
 	} = useSelectService();
 	const { getModelPrice } = useModelPriceService();
-	const [pageForm, setPageForm] = useState(true);
+	const [pageForm, setPageForm] = useState(false);
 	const user = useSelector(DATA_USER);
 	const { toast } = useToast();
 
@@ -141,9 +146,9 @@ function Order() {
 	const submitForm = (data) => {
 		data.userId = user.id;
 		data.deliveryDate = deliveryDate;
-    data.type = "BASIC";
-    data.sumPrice = parseInt(productPrice) + parseInt(customPrice);
-    data.finalPrice = parseInt(productPrice) + parseInt(customPrice);
+		data.type = "BASIC";
+		data.sumPrice = parseInt(productPrice) + parseInt(customPrice);
+		data.finalPrice = parseInt(productPrice) + parseInt(customPrice);
 		sendDataOrder(data);
 	};
 
@@ -159,7 +164,7 @@ function Order() {
 			toast({
 				description: res.data.message,
 			});
-			setIsDialogOpen(false);
+			setPageForm(false);
 			getListOrder();
 		} catch (error) {
 			console.log(error);
@@ -241,7 +246,11 @@ function Order() {
 	}, []);
 
 	useEffect(() => {
-		console.log(pageForm);
+		if (!pageForm) {
+			reset();
+			setCustomPrice(0);
+			setProductPrice(0);
+		}
 	}, [pageForm]);
 
 	useEffect(() => {
