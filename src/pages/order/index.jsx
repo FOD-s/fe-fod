@@ -31,6 +31,7 @@ const defaultValues = {
 	size: "",
 	material: "",
 	color: "",
+	doubleBackrest: false,
 	note: "",
 };
 
@@ -41,6 +42,7 @@ const schemaForm = yup.object().shape({
 	size: yup.string().required("Ukuran harus diisi"),
 	material: yup.string().required("Kain harus dipilih"),
 	color: yup.string().required("Warna harus diisi"),
+	doubleBackrest: yup.boolean(),
 	note: yup.string().nullable(),
 });
 
@@ -101,6 +103,11 @@ function Order() {
 
 	const idProduct = watch("idProduct");
 	const size = watch("size");
+	const doubleBackrest = watch("doubleBackrest");
+
+	useEffect(() => {
+		console.log(doubleBackrest);
+	}, [doubleBackrest]);
 
 	const {
 		control: controlEdit,
@@ -222,9 +229,9 @@ function Order() {
 		}
 	};
 
-	const getOptionSize = async () => {
+	const getOptionSize = async (idProduct) => {
 		try {
-			const res = await getDropdownSize();
+			const res = await getDropdownSize(idProduct);
 			setOptionsSizes(res?.data.data);
 		} catch (error) {
 			console.log(error);
@@ -243,7 +250,6 @@ function Order() {
 		getOptionDrawer();
 		getOptionButton();
 		getOptionCover();
-		getOptionSize();
 	}, []);
 
 	useEffect(() => {
@@ -257,6 +263,8 @@ function Order() {
 	useEffect(() => {
 		if (idProduct) {
 			resetField("size");
+			getOptionSize(idProduct);
+			setProductPrice(0);
 			// getPriceProduct(idProduct, size);
 		}
 	}, [idProduct]);
@@ -489,7 +497,14 @@ function Order() {
 													: schemaFormEdit
 											}
 										/>
-										<Checkbox label="Double Sandaran" />
+										<Checkbox
+											label="Double Sandaran"
+											name="doubleBackrest"
+											control={modalProps.type == "add" ? control : controlEdit}
+											schema={
+												modalProps.type == "add" ? schemaForm : schemaFormEdit
+											}
+										/>
 										<Checkbox label="Busa" />
 									</div>
 								</CollapsibleContent>
