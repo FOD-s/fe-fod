@@ -59,7 +59,7 @@ const useApi = () => {
 		async (path, dataBody) => {
 			try {
 				const response = await api.put(path, dataBody);
-				return response.data;
+				return response;
 			} catch (error) {
 				return error.response;
 			}
