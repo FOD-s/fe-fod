@@ -1,13 +1,20 @@
 import { Checkbox } from "@/components/ui/checkbox";
+import { Controller } from "react-hook-form";
 
-export default function CheckboxDemo({ label, name, control, schema }) {
+export default function CheckboxCustom({ label, name, control }) {
 	return (
 		<div className="flex items-center space-x-2">
-			<Checkbox
-				id={name}
+			<Controller
 				name={name}
 				control={control}
-				schema={schema}
+				render={({ field }) => (
+					<Checkbox
+						id={name}
+						name={name}
+						checked={field.value}
+						onCheckedChange={field.onChange}
+					/>
+				)}
 			/>
 			<label
 				htmlFor={name}

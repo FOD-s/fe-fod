@@ -1,4 +1,4 @@
-import Checkbox from "@/components/molecules/Checkbox";
+import CheckboxCustom from "@/components/molecules/Checkbox";
 import InputComponent from "@/components/molecules/Input";
 import SelectComponent from "@/components/molecules/SelectCustom";
 import DataTablePagination from "@/components/organisms/DataTablePagination";
@@ -659,7 +659,7 @@ function Order() {
 													: schemaFormEdit
 											}
 										/>
-										<Checkbox
+										<CheckboxCustom
 											label="Double Sandaran"
 											name="doubleBackrest"
 											control={modalProps.type == "add" ? control : controlEdit}
@@ -667,7 +667,14 @@ function Order() {
 												modalProps.type == "add" ? schemaForm : schemaFormEdit
 											}
 										/>
-										<Checkbox label="Busa" />
+										<CheckboxCustom
+											label="Busa"
+											name="foam"
+											control={modalProps.type == "add" ? control : controlEdit}
+											schema={
+												modalProps.type == "add" ? schemaForm : schemaFormEdit
+											}
+										/>
 									</div>
 								</CollapsibleContent>
 							</Collapsible>
