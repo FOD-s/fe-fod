@@ -3,6 +3,7 @@ import SearchInput from "@/components/molecules/SearchInput";
 import { Button } from "@/components/ui/button.tsx";
 import { LOADING } from "@/features/loading/loadingSlice.js";
 import { PAGINATION } from "@/features/pagination/paginationSlice.js";
+import { DATA_USER } from "@/features/auth/loginSlice.js";
 import {
 	EyeIcon,
 	PencilIcon,
@@ -61,6 +62,7 @@ const DataTablePagination = ({
 	handleApprove,
 	handleReview,
 }) => {
+	const user = useSelector(DATA_USER);
 	const pagination = useSelector(PAGINATION);
 	const loading = useSelector(LOADING);
 
@@ -306,18 +308,37 @@ const DataTablePagination = ({
 			columns.push({
 				name: "Aksi",
 				cell: (row) => (
-					<div className="flex w-full justify-evenly">
-						<EyeIcon
-							className="w-5 h-5 text-orange-500 cursor-pointer"
-							title="Detail"
-							onClick={() => handleEdit(row)}
-						/>
-						<PencilIcon
-							className="w-5 h-5 text-blue-700 cursor-pointer"
-							title="Ubah"
-							onClick={() => handleEdit(row)}
-						/>
-					</div>
+					<DropdownMenu>
+						<DropdownMenuTrigger>
+							<Button variant="ghost" title="Action">
+								<EllipsisVerticalIcon className="size-5" />
+							</Button>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent>
+							<DropdownMenuItem>
+								<Button
+									className="w-full p-1"
+									variant="ghost"
+									onClick={() => handleEdit(row)}
+									title="Detail"
+								>
+									<PencilIcon className="text-yellow-600 size-5" />
+									Edit
+								</Button>
+							</DropdownMenuItem>
+							<DropdownMenuItem>
+								<Button
+									className="w-full p-1"
+									variant="ghost"
+									onClick={() => handleDetail(row)}
+									title="Detail"
+								>
+									<EyeIcon className="text-blue-600 size-5" />
+									Detail
+								</Button>
+							</DropdownMenuItem>
+						</DropdownMenuContent>
+					</DropdownMenu>
 				),
 				allowOverflow: true,
 				button: true,
@@ -355,8 +376,17 @@ const DataTablePagination = ({
 
 	const SubHeader = () => {
 		return (
-			<div className="flex items-center justify-between w-full px-3 bg-bg-neumorphism">
-				<Button onClick={() => handleAdd()}>Add</Button>
+			<div
+				className={`flex items-center ${
+					user.roleId == 1 ? "justify-end" : "justify-between"
+				} w-full px-3 bg-bg-neumorphism`}
+			>
+				<Button
+					onClick={() => handleAdd()}
+					className={user.roleId == 1 ? "hidden" : "flex"}
+				>
+					Add
+				</Button>
 				<SearchInput />
 			</div>
 		);
