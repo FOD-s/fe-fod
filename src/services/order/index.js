@@ -7,6 +7,7 @@ const useOrderService = () => {
 	const getAllOrder = () => GET(`${endpoint.order}`);
 	const getListOrderByUserId = (userId) =>
 		GET(`${endpoint.order}/filter?userId=${userId}`);
+	const getOrderById = (id) => GET(`${endpoint.order}/${id}`);
 	const createOrder = (dataBody) => POST(`${endpoint.order}`, dataBody);
 	const approveOrder = (id, dataBody) =>
 		PUT(`${endpoint.order}/approve/${id}`, dataBody);
@@ -19,6 +20,7 @@ const useOrderService = () => {
 		createOrder,
 		approveOrder,
 		reviewOrder,
+		getOrderById
 	};
 };
 

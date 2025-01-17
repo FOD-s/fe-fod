@@ -13,6 +13,7 @@ function RadioButton({ className, defaultValue, options, control, name }) {
 					className="w-1/2 py-2"
 					value={field.value}
 					onValueChange={field.onChange}
+					disabled={field.disabled}
 				>
 					<div className={className}>
 						{options &&
