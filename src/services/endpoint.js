@@ -14,13 +14,16 @@ const endpoint = {
   dropdownButton: "/dropdown/buttons",
   dropdownCover:"/dropdown/covers",
   dropdownSize:"/dropdown/sizes",
-
+  dropdownTrundleBedSize:"/dropdown/trundle-bed-sizes",
   // Order
   order: "/orders",
   
 
   // Model
   model: "/models",
+
+  // TrundleBed
+  trundleBedPrice: "/trundle-beds/price"
 };
 
 export default endpoint;

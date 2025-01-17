@@ -12,6 +12,7 @@ const useSelectService = () => {
   const getDropdownButton = () => GET(`${endpoint.dropdownButton}`);
   const getDropdownCover = () => GET(`${endpoint.dropdownCover}`);
   const getDropdownSize = (idProduct) => GET(`${endpoint.dropdownSize}?idProduct=${idProduct}`);
+  const getDropdownTrundleBedSize = (idProduct,backrest) => GET(`${endpoint.dropdownTrundleBedSize}?idProduct=${idProduct}&backrest=${backrest}`)
   // POST
   // PUT
 
@@ -25,7 +26,8 @@ const useSelectService = () => {
     getDropdownDrawer,
     getDropdownButton,
     getDropdownCover,
-    getDropdownSize
+    getDropdownSize,
+    getDropdownTrundleBedSize
   };
 };
 
