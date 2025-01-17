@@ -70,8 +70,13 @@ const schemaFormEdit = yup.object().shape({
 });
 
 function Order() {
-	const { getAllOrder, createOrder, approveOrder, reviewOrder } =
-		useOrderService();
+	const {
+		getAllOrder,
+		getListOrderByUserId,
+		createOrder,
+		approveOrder,
+		reviewOrder,
+	} = useOrderService();
 	const [deliveryDate, setDeliveryDate] = useState(new Date());
 	const [openCollapse, setOpenCollapse] = useState(false);
 	const [modalProps, setModalProps] = useState({
@@ -140,8 +145,14 @@ function Order() {
 
 	const getListOrder = async () => {
 		try {
-			const res = await getAllOrder();
-			setListData(res?.data.data);
+			if (user.roleId == 1) {
+				const res = await getAllOrder();
+				setListData(res?.data.data);
+			} else {
+				const res = await getListOrderByUserId(user.id);
+				setListData(res?.data.data);
+			}
+			
 		} catch (error) {
 			console.log(error);
 		}
@@ -155,7 +166,7 @@ function Order() {
 				handleAdd={handleAdd}
 				// handleDelete={handleDelete}
 				// handleEdit={handleEdit}
-				statusAksi={user.roleId==1?"validation":"editAndDetail"}
+				statusAksi={user.roleId == 1 ? "validation" : "editAndDetail"}
 				handleApprove={handleApprove}
 				handleReview={handleReview}
 			/>
