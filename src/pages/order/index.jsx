@@ -89,7 +89,7 @@ function Order() {
 	} = useSelectService();
 	const { getModelPrice } = useModelPriceService();
 	const { getTrundleBedPrice } = useTrundleBedService();
-	const [pageForm, setPageForm] = useState(true);
+	const [pageForm, setPageForm] = useState(false);
 	const user = useSelector(DATA_USER);
 	const { toast } = useToast();
 
@@ -155,7 +155,7 @@ function Order() {
 				handleAdd={handleAdd}
 				// handleDelete={handleDelete}
 				// handleEdit={handleEdit}
-				statusAksi="validation"
+				statusAksi={user.roleId==1?"validation":"editAndDetail"}
 				handleApprove={handleApprove}
 				handleReview={handleReview}
 			/>
@@ -494,16 +494,10 @@ function Order() {
 									label="Model"
 									placeholder="Pilih"
 									options={optionsProducts}
-									control={
-										modalProps.type == "add" || editLogo ? control : controlEdit
-									}
-									errors={
-										modalProps.type == "add" || editLogo ? errors : errorsEdit
-									}
+									control={modalProps.type == "add" ? control : controlEdit}
+									errors={modalProps.type == "add" ? errors : errorsEdit}
 									schema={
-										modalProps.type == "add" || editLogo
-											? schemaForm
-											: schemaFormEdit
+										modalProps.type == "add" ? schemaForm : schemaFormEdit
 									}
 								/>
 								{/* <InputComponent
@@ -511,15 +505,15 @@ function Order() {
 									label="Ukuran"
 									type="text"
 									control={
-										modalProps.type == "add" || editLogo ? control : controlEdit
+										modalProps.type == "add"  ? control : controlEdit
 									}
 									schema={
-										modalProps.type == "add" || editLogo
+										modalProps.type == "add" 
 											? schemaForm
 											: schemaFormEdit
 									}
 									errors={
-										modalProps.type == "add" || editLogo ? errors : errorsEdit
+										modalProps.type == "add"  ? errors : errorsEdit
 									}
 								/> */}
 								<SelectComponent
@@ -552,33 +546,21 @@ function Order() {
 									label="Kain"
 									placeholder="Pilih"
 									options={optionsMaterials}
-									control={
-										modalProps.type == "add" || editLogo ? control : controlEdit
-									}
-									errors={
-										modalProps.type == "add" || editLogo ? errors : errorsEdit
-									}
+									control={modalProps.type == "add" ? control : controlEdit}
+									errors={modalProps.type == "add" ? errors : errorsEdit}
 									schema={
-										modalProps.type == "add" || editLogo
-											? schemaForm
-											: schemaFormEdit
+										modalProps.type == "add" ? schemaForm : schemaFormEdit
 									}
 								/>
 								<InputComponent
 									name="color"
 									label="Warna"
 									type="text"
-									control={
-										modalProps.type == "add" || editLogo ? control : controlEdit
-									}
+									control={modalProps.type == "add" ? control : controlEdit}
 									schema={
-										modalProps.type == "add" || editLogo
-											? schemaForm
-											: schemaFormEdit
+										modalProps.type == "add" ? schemaForm : schemaFormEdit
 									}
-									errors={
-										modalProps.type == "add" || editLogo ? errors : errorsEdit
-									}
+									errors={modalProps.type == "add" ? errors : errorsEdit}
 								/>
 							</div>
 							<Collapsible
@@ -622,20 +604,10 @@ function Order() {
 											label="Kancing"
 											placeholder="Pilih"
 											options={optionsButton}
-											control={
-												modalProps.type == "add" || editLogo
-													? control
-													: controlEdit
-											}
-											errors={
-												modalProps.type == "add" || editLogo
-													? errors
-													: errorsEdit
-											}
+											control={modalProps.type == "add" ? control : controlEdit}
+											errors={modalProps.type == "add" ? errors : errorsEdit}
 											schema={
-												modalProps.type == "add" || editLogo
-													? schemaForm
-													: schemaFormEdit
+												modalProps.type == "add" ? schemaForm : schemaFormEdit
 											}
 										/>
 										<SelectComponent
@@ -643,20 +615,10 @@ function Order() {
 											label="Amparan"
 											placeholder="Pilih"
 											options={optionsCover}
-											control={
-												modalProps.type == "add" || editLogo
-													? control
-													: controlEdit
-											}
-											errors={
-												modalProps.type == "add" || editLogo
-													? errors
-													: errorsEdit
-											}
+											control={modalProps.type == "add" ? control : controlEdit}
+											errors={modalProps.type == "add" ? errors : errorsEdit}
 											schema={
-												modalProps.type == "add" || editLogo
-													? schemaForm
-													: schemaFormEdit
+												modalProps.type == "add" ? schemaForm : schemaFormEdit
 											}
 										/>
 										<CheckboxCustom
@@ -704,23 +666,27 @@ function Order() {
 										<h2>Harga Pokok</h2>
 									</td>
 									<td className="text-right">
-										<h2>{formatRupiah(productPrice)}</h2>
+										<h2>{productPrice ? formatRupiah(productPrice) : "0"}</h2>
 									</td>
 								</tr>
-								<tr className="border-b border-gray-500">
+								<tr>
 									<td>
 										<h2>Harga Custom</h2>
 									</td>
 									<td className="text-right">
-										<h2>{formatRupiah(customPrice)}</h2>
+										<h2>{customPrice ? formatRupiah(customPrice) : "0"}</h2>
 									</td>
+								</tr>
+								<tr className="mt-3 border-b border-gray-500">
+									<td></td>
+									<td></td>
 								</tr>
 								<tr className="font-bold">
 									<td>
 										<h1>Total</h1>
 									</td>
 									<td className="text-right">
-										<h2>{formatRupiah(totalPrice)}</h2>
+										<h2>{totalPrice ? formatRupiah(totalPrice) : "0"}</h2>
 									</td>
 								</tr>
 							</table>

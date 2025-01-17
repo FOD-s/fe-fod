@@ -19,7 +19,7 @@ function RadioButton({ className, defaultValue, options, control, name }) {
 							options?.map((option) => (
 								<div key={option.value} className="flex items-center space-x-2">
 									<RadioGroupItem value={option.value} id={option.value}  />
-									<Label htmlFor={option.value}>{option.label}</Label>
+									<Label htmlFor={option.value.toString()}>{option.label}</Label>
 								</div>
 							))}
 					</div>
