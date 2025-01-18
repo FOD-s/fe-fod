@@ -134,6 +134,7 @@ const DataTablePagination = ({
             name: "Model",
             selector: (row) => row.productName,
             sortable: true,
+            center: true,
           });
           break;
         case "status":
@@ -194,7 +195,7 @@ const DataTablePagination = ({
             name: "Konsumen",
             selector: (row) => row.client,
             // sortable: true,
-            center: true,
+            // center: true,
           });
           break;
         case "orderDate":
