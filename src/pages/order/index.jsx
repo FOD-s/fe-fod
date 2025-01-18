@@ -33,6 +33,11 @@ const optionsTrundleBed = [
   { value: false, label: "Non Sandaran" },
 ];
 
+const optionsType = [
+  { value: "BASIC", label: "BASIC" },
+  { value: 'KOLAM', label: "KOLAM" },
+];
+
 const MySwal = withReactContent(Swal);
 
 const defaultValues = {
@@ -95,7 +100,7 @@ function Order() {
   } = useSelectService();
   const { getModelPrice } = useModelPriceService();
   const { getTrundleBedPrice } = useTrundleBedService();
-  const [pageForm, setPageForm] = useState(false);
+  const [pageForm, setPageForm] = useState(true);
   const user = useSelector(DATA_USER);
   const { toast } = useToast();
 
@@ -580,33 +585,35 @@ function Order() {
                   }
                   disabled={modalProps.type == "detail"}
                 />
-                {idProduct == 5 && (
-                  <div className="flex items-center col-span-2">
-                    <RadioButton
-                      className="grid w-full grid-cols-2"
-                      options={optionsTrundleBed}
-                      defaultValue={true}
-                      control={modalProps.type == "add" ? control : controlEdit}
-                      name="backrest"
-                      schema={
-                        modalProps.type == "add" ? schemaForm : schemaFormEdit
-                      }
-                      disabled={modalProps.type == "detail"}
-                    />
-                  </div>
-                )}
-                <SelectComponent
-                  name="material"
-                  label="Kain"
-                  placeholder="Pilih"
-                  options={optionsMaterials}
-                  control={modalProps.type == "add" ? control : controlEdit}
-                  errors={modalProps.type == "add" ? errors : errorsEdit}
-                  schema={
-                    modalProps.type == "add" ? schemaForm : schemaFormEdit
-                  }
-                  disabled={modalProps.type == "detail"}
-                />
+                {idProduct == 5 ? (
+                  <RadioButton
+                    className="grid w-full grid-cols-2 items-center"
+                    options={optionsTrundleBed}
+                    defaultValue={true}
+                    control={modalProps.type == "add" ? control : controlEdit}
+                    name="backrest"
+                    schema={
+                      modalProps.type == "add" ? schemaForm : schemaFormEdit
+                    }
+                    disabled={modalProps.type == "detail"}
+                    label="Tipe"
+                  />
+                ) : (
+                  <RadioButton
+                    className="grid w-full grid-cols-2 items-center"
+                    options={optionsType}
+                    defaultValue="BASIC"
+                    control={modalProps.type == "add" ? control : controlEdit}
+                    name="type"
+                    schema={
+                      modalProps.type == "add" ? schemaForm : schemaFormEdit
+                    }
+                    disabled={modalProps.type == "detail"}
+                    label="Tipe"
+                  />
+                )
+              }
+
                 <InputComponent
                   name="color"
                   label="Warna"
@@ -634,6 +641,18 @@ function Order() {
                 </span>
                 <CollapsibleContent>
                   <div className="grid grid-cols-2 gap-3 pb-3">
+                    <SelectComponent
+                      name="material"
+                      label="Kain"
+                      placeholder="Pilih"
+                      options={optionsMaterials}
+                      control={modalProps.type == "add" ? control : controlEdit}
+                      errors={modalProps.type == "add" ? errors : errorsEdit}
+                      schema={
+                        modalProps.type == "add" ? schemaForm : schemaFormEdit
+                      }
+                      disabled={modalProps.type == "detail"}
+                    />
                     <SelectComponent
                       name="drawer"
                       label="Laci"
