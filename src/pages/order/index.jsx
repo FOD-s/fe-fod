@@ -23,20 +23,15 @@ import { useToast } from "@/hooks/use-toast";
 import RadioButton from "@/components/molecules/RadioButton";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import {
+  OPTIONS_TRUNDLE_BED,
+  OPTIONS_TYPE_BED,
+  OPTIONS_DRAWER_POSITION,
+} from "@/utils/constant.js";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import { get, set, useForm } from "react-hook-form";
 import * as yup from "yup";
-
-const optionsTrundleBed = [
-  { value: true, label: "Sandaran" },
-  { value: false, label: "Non Sandaran" },
-];
-
-const optionsType = [
-  { value: "BASIC", label: "BASIC" },
-  { value: 'KOLAM', label: "KOLAM" },
-];
 
 const MySwal = withReactContent(Swal);
 
@@ -588,7 +583,7 @@ function Order() {
                 {idProduct == 5 ? (
                   <RadioButton
                     className="grid w-full grid-cols-2 items-center"
-                    options={optionsTrundleBed}
+                    options={OPTIONS_TRUNDLE_BED}
                     defaultValue={true}
                     control={modalProps.type == "add" ? control : controlEdit}
                     name="backrest"
@@ -601,7 +596,7 @@ function Order() {
                 ) : (
                   <RadioButton
                     className="grid w-full grid-cols-2 items-center"
-                    options={optionsType}
+                    options={OPTIONS_TYPE_BED}
                     defaultValue="BASIC"
                     control={modalProps.type == "add" ? control : controlEdit}
                     name="type"
@@ -611,8 +606,7 @@ function Order() {
                     disabled={modalProps.type == "detail"}
                     label="Tipe"
                   />
-                )
-              }
+                )}
 
                 <InputComponent
                   name="color"
@@ -631,56 +625,21 @@ function Order() {
                 onOpenChange={setOpenCollapse}
                 className="h-full"
               >
-                <span className="flex justify-between">
-                  <h2 className="font-bold">Custom</h2>
-                  <CollapsibleTrigger>
+                <CollapsibleTrigger className="w-full">
+                  <span className="flex justify-between">
+                    <h2 className="font-bold">Custom</h2>
                     <Button variant="ghost" type="button">
                       {openCollapse ? <ChevronUp /> : <ChevronDown />}
                     </Button>
-                  </CollapsibleTrigger>
-                </span>
+                  </span>
+                </CollapsibleTrigger>
                 <CollapsibleContent>
-                  <div className="grid grid-cols-2 gap-3 pb-3">
+                  <div className="grid grid-cols-2 gap-3 pb-3 items-center">
                     <SelectComponent
                       name="material"
                       label="Kain"
                       placeholder="Pilih"
                       options={optionsMaterials}
-                      control={modalProps.type == "add" ? control : controlEdit}
-                      errors={modalProps.type == "add" ? errors : errorsEdit}
-                      schema={
-                        modalProps.type == "add" ? schemaForm : schemaFormEdit
-                      }
-                      disabled={modalProps.type == "detail"}
-                    />
-                    <SelectComponent
-                      name="drawer"
-                      label="Laci"
-                      placeholder="Pilih"
-                      options={optionsDrawer}
-                      control={modalProps.type == "add" ? control : controlEdit}
-                      errors={modalProps.type == "add" ? errors : errorsEdit}
-                      schema={
-                        modalProps.type == "add" ? schemaForm : schemaFormEdit
-                      }
-                      disabled={modalProps.type == "detail"}
-                    />
-                    <InputComponent
-                      name="item"
-                      label="Item"
-                      type="number "
-                      control={modalProps.type == "add" ? control : controlEdit}
-                      schema={
-                        modalProps.type == "add" ? schemaForm : schemaFormEdit
-                      }
-                      errors={modalProps.type == "add" ? errors : errorsEdit}
-                      disabled={modalProps.type == "detail"}
-                    />
-                    <SelectComponent
-                      name="buttons"
-                      label="Kancing"
-                      placeholder="Pilih"
-                      options={optionsButton}
                       control={modalProps.type == "add" ? control : controlEdit}
                       errors={modalProps.type == "add" ? errors : errorsEdit}
                       schema={
@@ -700,6 +659,76 @@ function Order() {
                       }
                       disabled={modalProps.type == "detail"}
                     />
+                    <div className="grid grid-cols-2 col-span-2 gap-3 items-center">
+                      <SelectComponent
+                        name="buttons"
+                        label="Kancing"
+                        placeholder="Pilih"
+                        options={optionsButton}
+                        control={
+                          modalProps.type == "add" ? control : controlEdit
+                        }
+                        errors={modalProps.type == "add" ? errors : errorsEdit}
+                        schema={
+                          modalProps.type == "add" ? schemaForm : schemaFormEdit
+                        }
+                        disabled={modalProps.type == "detail"}
+                      />
+                      <CheckboxCustom
+                        label="Tambah Kancing"
+                        name="addButton"
+                        control={
+                          modalProps.type == "add" ? control : controlEdit
+                        }
+                        schema={
+                          modalProps.type == "add" ? schemaForm : schemaFormEdit
+                        }
+                        disabled={modalProps.type == "detail"}
+                      />
+                    </div>
+                    <div className="grid grid-cols-3 col-span-2 gap-3">
+                      <SelectComponent
+                        name="drawer"
+                        label="Tipe Laci"
+                        placeholder="Pilih"
+                        options={optionsDrawer}
+                        control={
+                          modalProps.type == "add" ? control : controlEdit
+                        }
+                        errors={modalProps.type == "add" ? errors : errorsEdit}
+                        schema={
+                          modalProps.type == "add" ? schemaForm : schemaFormEdit
+                        }
+                        disabled={modalProps.type == "detail"}
+                      />
+                      <InputComponent
+                        name="item"
+                        label="Jumlah Laci"
+                        type="number"
+                        control={
+                          modalProps.type == "add" ? control : controlEdit
+                        }
+                        schema={
+                          modalProps.type == "add" ? schemaForm : schemaFormEdit
+                        }
+                        errors={modalProps.type == "add" ? errors : errorsEdit}
+                        disabled={modalProps.type == "detail"}
+                      />
+                      <SelectComponent
+                        name="drawerPosition"
+                        label="Posisi Laci"
+                        placeholder="Pilih"
+                        options={OPTIONS_DRAWER_POSITION}
+                        control={
+                          modalProps.type == "add" ? control : controlEdit
+                        }
+                        errors={modalProps.type == "add" ? errors : errorsEdit}
+                        schema={
+                          modalProps.type == "add" ? schemaForm : schemaFormEdit
+                        }
+                        disabled={modalProps.type == "detail"}
+                      />
+                    </div>
                     <CheckboxCustom
                       label="Double Sandaran"
                       name="doubleBackrest"
@@ -730,7 +759,7 @@ function Order() {
                 errors={modalProps.type == "add" ? errors : errorsEdit}
                 disabled={modalProps.type == "detail"}
               />
-              <div className="grid grid-cols-1 gap-3 lg:grid-cols-2 lg:col-span-2 items-self-end">
+              <div className="grid grid-cols-1 gap-3 lg:grid-cols-2 lg:col-span-2 items-self-end border-t py-3 border-gray-500">
                 <Button type="submit" disabled={modalProps.type == "detail"}>
                   Submit
                 </Button>
