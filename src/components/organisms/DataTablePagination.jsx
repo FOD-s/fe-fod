@@ -59,7 +59,7 @@ const DataTablePagination = ({
   handleAdd,
   handleEdit,
   handleDelete,
-	handleDetail,
+  handleDetail,
   handleApprove,
   handleReview,
 }) => {
@@ -155,7 +155,20 @@ const DataTablePagination = ({
         case "type":
           columns.push({
             name: "Tipe",
-            selector: (row) => row.type,
+            selector: (row) => row.type || "-",
+            // sortable: true,
+            center: true,
+          });
+          break;
+        case "backrest":
+          columns.push({
+            name: "Sandaran",
+            selector: (row) => {
+              if (row.idProduct == 5) {
+                return row.backrest ? "Sandaran" : "Non Sandaran";
+              }
+              return "-";
+            },
             // sortable: true,
             center: true,
           });

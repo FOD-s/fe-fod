@@ -44,6 +44,7 @@ const defaultValues = {
   material: "",
   color: "",
   doubleBackrest: false,
+  type: "BASIC",
   note: "",
 };
 
@@ -51,9 +52,8 @@ const schemaForm = yup.object().shape({
   client: yup.string().required("Konsumen harus diisi"),
   deliveryAddress: yup.string().required("Alamat harus diisi"),
   idProduct: yup.string().required("Produk harus dipilih"),
-  backrest: yup.boolean(),
   size: yup.string().required("Ukuran harus diisi"),
-  material: yup.string().required("Kain harus dipilih"),
+  // material: yup.string().required("Kain harus dipilih"),
   color: yup.string().required("Warna harus diisi"),
   doubleBackrest: yup.boolean(),
   note: yup.string().nullable(),
@@ -95,7 +95,7 @@ function Order() {
   } = useSelectService();
   const { getModelPrice } = useModelPriceService();
   const { getTrundleBedPrice } = useTrundleBedService();
-  const [pageForm, setPageForm] = useState(true);
+  const [pageForm, setPageForm] = useState(false);
   const user = useSelector(DATA_USER);
   const { toast } = useToast();
 
@@ -123,10 +123,11 @@ function Order() {
     defaultValues: defaultValues,
   });
 
+  // listening state
   const idProduct = watch("idProduct");
   const size = watch("size");
   const backrest = watch("backrest");
-
+  const type = watch("type");
   const doubleBackrest = watch("doubleBackrest");
 
   useEffect(() => {
@@ -331,9 +332,10 @@ function Order() {
   const submitForm = (data) => {
     data.userId = user.id;
     data.deliveryDate = deliveryDate;
-    data.type = "BASIC";
+    data.idProduct == 5 ? delete data.type : delete data.backrest;
     data.sumPrice = parseInt(productPrice) + parseInt(customPrice);
     data.finalPrice = parseInt(productPrice) + parseInt(customPrice);
+    data.material ? (data.material = data.material) : delete data.material;
     sendDataOrder(data);
   };
 
@@ -406,10 +408,10 @@ function Order() {
     }
   };
 
-  const getOptionSize = async (idProduct) => {
+  const getOptionSize = async (idProduct, type) => {
     try {
       if (idProduct) {
-        const res = await getDropdownSize(idProduct);
+        const res = await getDropdownSize(idProduct, type);
         setOptionsSizes(res?.data.data);
       }
     } catch (error) {
@@ -453,14 +455,22 @@ function Order() {
     setProductPrice(0);
     resetField("size");
     if (idProduct != 5) {
-      getOptionSize(idProduct);
+      getOptionSize(idProduct, type);
+      setValue("type", "BASIC");
     } else {
       getOptionTrundleSize(idProduct, backrest);
+      setValue("backrest", true);
     }
   }, [idProduct]);
 
   useEffect(() => {
-    const getPriceProduct = async (idProduct, size, type = "BASIC") => {
+    setProductPrice(0);
+    resetField("size");
+    getOptionSize(idProduct, type);
+  }, [type]);
+
+  useEffect(() => {
+    const getPriceProduct = async (idProduct, size, type, backrest) => {
       try {
         if (idProduct != 5) {
           const res = await getModelPrice(idProduct, size, type);
@@ -475,7 +485,7 @@ function Order() {
     };
 
     if (idProduct && size) {
-      getPriceProduct(idProduct, size);
+      getPriceProduct(idProduct, size, type, backrest);
     }
   }, [size, backrest]);
 
@@ -568,6 +578,33 @@ function Order() {
 										modalProps.type == "add"  ? errors : errorsEdit
 									}
 								/> */}
+                {idProduct == 5 ? (
+                  <RadioButton
+                    className="grid w-full grid-cols-2 items-center"
+                    options={OPTIONS_TRUNDLE_BED}
+                    control={modalProps.type == "add" ? control : controlEdit}
+                    name="backrest"
+                    schema={
+                      modalProps.type == "add" ? schemaForm : schemaFormEdit
+                    }
+                    disabled={modalProps.type == "detail"}
+                    label="Tipe"
+                    defaultValues={OPTIONS_TRUNDLE_BED[0].value}
+                  />
+                ) : (
+                  <RadioButton
+                    className="grid w-full grid-cols-2 items-center"
+                    options={OPTIONS_TYPE_BED}
+                    control={modalProps.type == "add" ? control : controlEdit}
+                    name="type"
+                    schema={
+                      modalProps.type == "add" ? schemaForm : schemaFormEdit
+                    }
+                    disabled={modalProps.type == "detail"}
+                    label="Tipe"
+                    defaultValues={OPTIONS_TYPE_BED[0].value}
+                  />
+                )}
                 <SelectComponent
                   name="size"
                   label="Ukuran"
@@ -580,34 +617,6 @@ function Order() {
                   }
                   disabled={modalProps.type == "detail"}
                 />
-                {idProduct == 5 ? (
-                  <RadioButton
-                    className="grid w-full grid-cols-2 items-center"
-                    options={OPTIONS_TRUNDLE_BED}
-                    defaultValue={true}
-                    control={modalProps.type == "add" ? control : controlEdit}
-                    name="backrest"
-                    schema={
-                      modalProps.type == "add" ? schemaForm : schemaFormEdit
-                    }
-                    disabled={modalProps.type == "detail"}
-                    label="Tipe"
-                  />
-                ) : (
-                  <RadioButton
-                    className="grid w-full grid-cols-2 items-center"
-                    options={OPTIONS_TYPE_BED}
-                    defaultValue="BASIC"
-                    control={modalProps.type == "add" ? control : controlEdit}
-                    name="type"
-                    schema={
-                      modalProps.type == "add" ? schemaForm : schemaFormEdit
-                    }
-                    disabled={modalProps.type == "detail"}
-                    label="Tipe"
-                  />
-                )}
-
                 <InputComponent
                   name="color"
                   label="Warna"
