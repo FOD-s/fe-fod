@@ -21,6 +21,9 @@ const endpoint = {
 
   // Material
   material: "/materials",
+
+  // Cover
+  coverPrice: "/covers/price",
   
 
   // Model

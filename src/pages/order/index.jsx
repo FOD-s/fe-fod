@@ -14,6 +14,7 @@ import useSelectService from "@/services/select";
 import useModelPriceService from "@/services/model";
 import useTrundleBedService from "@/services/trundleBd";
 import useMaterialPriceService from "@/services/material";
+import useCoverPriceService from "@/services/cover";
 import { ChevronDown, ChevronUp, ChevronsLeft } from "lucide-react";
 import { useEffect, useState } from "react";
 import Datepick from "../../components/molecules/Datepick";
@@ -44,6 +45,7 @@ const defaultValues = {
   backrest: true,
   size: "",
   material: "",
+  cover: "",
   color: "",
   doubleBackrest: false,
   type: "BASIC",
@@ -91,6 +93,7 @@ function Order() {
   } = useSelectService();
   const { getMaterialPrice } = useMaterialPriceService();
   const { getModelPrice } = useModelPriceService();
+  const { getCoverPrice } = useCoverPriceService();
   const [openCollapse, setOpenCollapse] = useState(false);
   const [modalProps, setModalProps] = useState({
     title: "Add Order",
@@ -137,6 +140,7 @@ function Order() {
   // subscribe form value
   const idProduct = watch("idProduct");
   const material = watch("material");
+  const cover = watch("cover");
   const size = watch("size");
   const backrest = watch("backrest");
   const type = watch("type");
@@ -454,6 +458,15 @@ function Order() {
     }
   };
 
+  const getCustomPriceCover = async () => {
+    try {
+      const res = await getCoverPrice(size, cover);
+      setCoverPrice(res?.data.price);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     getListOrder();
     getOptionProduct();
@@ -467,13 +480,16 @@ function Order() {
   useEffect(() => {
     if (!pageForm) {
       reset();
-      setCustomPrice(0);
       setProductPrice(0);
+      setMaterialPrice(0);
     }
   }, [pageForm]);
 
   useEffect(() => {
     setProductPrice(0);
+    setMaterialPrice(0);
+
+    resetField("material");
     resetField("size");
     if (idProduct != 5) {
       getOptionSize(idProduct, type);
@@ -491,10 +507,16 @@ function Order() {
   }, [material]);
 
   useEffect(() => {
+    if (size && cover) {
+      getCustomPriceCover(size, cover);
+    }
+  }, [cover]);
+
+  useEffect(() => {
     setProductPrice(0);
     resetField("size");
     getOptionSize(idProduct, type);
-    if(material){
+    if (material) {
       getCustomPriceMaterial(idProduct, type, material);
     }
   }, [type]);
@@ -516,6 +538,10 @@ function Order() {
 
     if (idProduct && size) {
       getPriceProduct(idProduct, size, type, backrest);
+    }
+
+    if (size && cover) {
+      getCustomPriceCover(size, cover);
     }
   }, [size, backrest]);
 
