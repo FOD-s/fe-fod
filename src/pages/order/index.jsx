@@ -13,6 +13,7 @@ import useOrderService from "@/services/order";
 import useSelectService from "@/services/select";
 import useModelPriceService from "@/services/model";
 import useTrundleBedService from "@/services/trundleBd";
+import useMaterialPriceService from "@/services/material";
 import { ChevronDown, ChevronUp, ChevronsLeft } from "lucide-react";
 import { useEffect, useState } from "react";
 import Datepick from "../../components/molecules/Datepick";
@@ -28,9 +29,10 @@ import {
   OPTIONS_TYPE_BED,
   OPTIONS_DRAWER_POSITION,
 } from "@/utils/constant.js";
+import TablePrice from "@/components/molecules/TablePrice";
 
 import { yupResolver } from "@hookform/resolvers/yup";
-import { get, set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import * as yup from "yup";
 
 const MySwal = withReactContent(Swal);
@@ -78,12 +80,6 @@ function Order() {
     reviewOrder,
     getOrderById,
   } = useOrderService();
-  const [deliveryDate, setDeliveryDate] = useState(new Date());
-  const [openCollapse, setOpenCollapse] = useState(false);
-  const [modalProps, setModalProps] = useState({
-    title: "Add Order",
-    type: "add",
-  });
   const {
     getDropdownProduct,
     getDropdownMaterial,
@@ -93,21 +89,36 @@ function Order() {
     getDropdownSize,
     getDropdownTrundleBedSize,
   } = useSelectService();
+  const { getMaterialPrice } = useMaterialPriceService();
   const { getModelPrice } = useModelPriceService();
+  const [openCollapse, setOpenCollapse] = useState(false);
+  const [modalProps, setModalProps] = useState({
+    title: "Add Order",
+    type: "add",
+  });
   const { getTrundleBedPrice } = useTrundleBedService();
-  const [pageForm, setPageForm] = useState(false);
+  const [pageForm, setPageForm] = useState(true);
   const user = useSelector(DATA_USER);
   const { toast } = useToast();
 
-  let [listData, setListData] = useState([]);
+  // options state
   let [optionsProducts, setOptionsProducts] = useState([]);
   let [optionsMaterials, setOptionsMaterials] = useState([]);
   let [optionsDrawer, setOptionsDrawers] = useState([]);
   let [optionsButton, setOptionsButtons] = useState([]);
   let [optionsCover, setOptionsCovers] = useState([]);
   let [optionsSize, setOptionsSizes] = useState([]);
+
+  // main state
+  let [listData, setListData] = useState([]);
+  let [deliveryDate, setDeliveryDate] = useState(new Date());
   let [productPrice, setProductPrice] = useState(0);
-  let [customPrice, setCustomPrice] = useState(0);
+  let [materialPrice, setMaterialPrice] = useState(0);
+  let [coverPrice, setCoverPrice] = useState(0);
+  let [buttonPrice, setButtonPrice] = useState(0);
+  let [drawerPrice, setDrawerPrice] = useState(0);
+  let [doubleBackrestPrice, setDoubleBackrestPrice] = useState(0);
+  let [foamPrice, setFoamPrice] = useState(0);
   let [totalPrice, setTotalPrice] = useState(0);
 
   const {
@@ -123,8 +134,9 @@ function Order() {
     defaultValues: defaultValues,
   });
 
-  // listening state
+  // subscribe form value
   const idProduct = watch("idProduct");
+  const material = watch("material");
   const size = watch("size");
   const backrest = watch("backrest");
   const type = watch("type");
@@ -433,6 +445,15 @@ function Order() {
     setDeliveryDate(formattedDate);
   };
 
+  const getCustomPriceMaterial = async () => {
+    try {
+      const res = await getMaterialPrice(idProduct, type, material);
+      setMaterialPrice(res?.data.price);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     getListOrder();
     getOptionProduct();
@@ -464,9 +485,18 @@ function Order() {
   }, [idProduct]);
 
   useEffect(() => {
+    if (material && idProduct && type) {
+      getCustomPriceMaterial(idProduct, type, material);
+    }
+  }, [material]);
+
+  useEffect(() => {
     setProductPrice(0);
     resetField("size");
     getOptionSize(idProduct, type);
+    if(material){
+      getCustomPriceMaterial(idProduct, type, material);
+    }
   }, [type]);
 
   useEffect(() => {
@@ -489,9 +519,9 @@ function Order() {
     }
   }, [size, backrest]);
 
-  useEffect(() => {
-    setTotalPrice(parseInt(productPrice) + parseInt(customPrice));
-  }, [customPrice, productPrice]);
+  // useEffect(() => {
+  //   setTotalPrice(parseInt(productPrice) + parseInt(customPrice));
+  // }, [customPrice, productPrice]);
 
   return (
     <>
@@ -783,38 +813,16 @@ function Order() {
               </div>
             </form>
             <div className="flex flex-col p-6">
-              <table>
-                <tbody>
-                  <tr>
-                    <td>
-                      <h2>Harga Pokok</h2>
-                    </td>
-                    <td className="text-right">
-                      <h2>{productPrice ? formatRupiah(productPrice) : "0"}</h2>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <h2>Harga Custom</h2>
-                    </td>
-                    <td className="text-right">
-                      <h2>{customPrice ? formatRupiah(customPrice) : "0"}</h2>
-                    </td>
-                  </tr>
-                  <tr className="mt-3 border-b border-gray-500">
-                    <td></td>
-                    <td></td>
-                  </tr>
-                  <tr className="font-bold">
-                    <td>
-                      <h1>Total</h1>
-                    </td>
-                    <td className="text-right">
-                      <h2>{totalPrice ? formatRupiah(totalPrice) : "0"}</h2>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <TablePrice
+                productPrice={productPrice}
+                materialPrice={materialPrice}
+                coverPrice={coverPrice}
+                buttonPrice={buttonPrice}
+                drawerPrice={drawerPrice}
+                doubleBackrestPrice={doubleBackrestPrice}
+                foamPrice={foamPrice}
+                totalPrice={totalPrice}
+              />
             </div>
           </div>
         </div>
