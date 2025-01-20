@@ -24,6 +24,9 @@ const endpoint = {
 
   // Cover
   coverPrice: "/covers/price",
+
+  // Button
+  buttonPrice: "/buttons/price",
   
 
   // Model

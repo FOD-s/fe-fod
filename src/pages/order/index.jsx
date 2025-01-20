@@ -15,6 +15,7 @@ import useModelPriceService from "@/services/model";
 import useTrundleBedService from "@/services/trundleBd";
 import useMaterialPriceService from "@/services/material";
 import useCoverPriceService from "@/services/cover";
+import useButtonService from "@/services/buttons";
 import { ChevronDown, ChevronUp, ChevronsLeft } from "lucide-react";
 import { useEffect, useState } from "react";
 import Datepick from "../../components/molecules/Datepick";
@@ -46,6 +47,8 @@ const defaultValues = {
   size: "",
   material: "",
   cover: "",
+  button: "",
+  extra: "",
   color: "",
   doubleBackrest: false,
   type: "BASIC",
@@ -94,13 +97,14 @@ function Order() {
   const { getMaterialPrice } = useMaterialPriceService();
   const { getModelPrice } = useModelPriceService();
   const { getCoverPrice } = useCoverPriceService();
-  const [openCollapse, setOpenCollapse] = useState(false);
+  const { getButtonPrice } = useButtonService();
   const [modalProps, setModalProps] = useState({
     title: "Add Order",
     type: "add",
   });
   const { getTrundleBedPrice } = useTrundleBedService();
-  const [pageForm, setPageForm] = useState(false);
+  const [pageForm, setPageForm] = useState(true);
+  const [openCollapse, setOpenCollapse] = useState(true);
   const user = useSelector(DATA_USER);
   const { toast } = useToast();
 
@@ -144,6 +148,8 @@ function Order() {
   const size = watch("size");
   const backrest = watch("backrest");
   const type = watch("type");
+  const button = watch("button");
+  const extra = watch("extra");
   const doubleBackrest = watch("doubleBackrest");
 
   useEffect(() => {
@@ -467,6 +473,15 @@ function Order() {
     }
   };
 
+  const getCustomPriceButton = async (button, extra) => {
+    try {
+      const res = await getButtonPrice(button, extra);
+      setButtonPrice(res?.data.price);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     getListOrder();
     getOptionProduct();
@@ -537,13 +552,27 @@ function Order() {
     };
 
     if (idProduct && size) {
-      getPriceProduct(idProduct, size, type, backrest);
+      if (backrest) {
+        getPriceProduct(idProduct, size, type, 1);
+      } else {
+        getPriceProduct(idProduct, size, type, 0);
+      }
     }
 
     if (size && cover) {
       getCustomPriceCover(size, cover);
     }
   }, [size, backrest]);
+
+  useEffect(() => {
+    if (button) {
+      if (extra) {
+        getCustomPriceButton(button, 1);
+      } else {
+        getCustomPriceButton(button, 0);
+      }
+    }
+  }, [button, extra]);
 
   // useEffect(() => {
   //   setTotalPrice(parseInt(productPrice) + parseInt(customPrice));
@@ -726,7 +755,7 @@ function Order() {
                     />
                     <div className="grid grid-cols-2 col-span-2 gap-3 items-center">
                       <SelectComponent
-                        name="buttons"
+                        name="button"
                         label="Kancing"
                         placeholder="Pilih"
                         options={optionsButton}
@@ -741,7 +770,7 @@ function Order() {
                       />
                       <CheckboxCustom
                         label="Tambah Kancing"
-                        name="addButton"
+                        name="extra"
                         control={
                           modalProps.type == "add" ? control : controlEdit
                         }
