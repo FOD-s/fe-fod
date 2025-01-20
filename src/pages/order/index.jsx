@@ -100,7 +100,7 @@ function Order() {
     type: "add",
   });
   const { getTrundleBedPrice } = useTrundleBedService();
-  const [pageForm, setPageForm] = useState(true);
+  const [pageForm, setPageForm] = useState(false);
   const user = useSelector(DATA_USER);
   const { toast } = useToast();
 
