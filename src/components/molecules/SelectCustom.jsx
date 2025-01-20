@@ -16,7 +16,8 @@ const SelectComponent = ({
   placeholder,
   control,
   options,
-  onValueChange, // Add this prop
+  onValueChange,
+  disabled
 }) => {
   return (
     <div className="space-y-1">
@@ -33,6 +34,7 @@ const SelectComponent = ({
               if (onValueChange) onValueChange(value); // Call the callback
             }}
             {...field}
+            disabled={disabled}
           >
             <SelectTrigger  className="!shadow-neumorphism-inner">
               <SelectValue placeholder={placeholder} />

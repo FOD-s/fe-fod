@@ -44,7 +44,7 @@ function Layout() {
 							</Breadcrumb> */}
 						</div>
 					</header>
-					<div className="flex flex-col flex-1 gap-4 p-6 pt-3 rounded-tl-xl bg-bg-neumorphism shadow-neumorphism-inner">
+					<div className="flex flex-col flex-1 gap-4 p-6 pt-3 rounded-tl-xl bg-bg-neumorphism shadow-neumorphism-inner overflow-auto">
 						<Outlet />
 					</div>
 				</SidebarInset>

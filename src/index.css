@@ -110,4 +110,14 @@
   nav.rdt_Pagination {
     @apply rounded-b-lg;
   }
+
+  .table-price {
+    tr,tr:not(:last-child) td {
+      @apply border border-gray-500 px-3 py-1;
+    }
+
+    tr:nth-last-child(1) td {
+      @apply px-3 py-1;
+    }
+  }
 }

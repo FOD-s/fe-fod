@@ -15,8 +15,15 @@ const endpoint = {
   dropdownCover:"/dropdown/covers",
   dropdownSize:"/dropdown/sizes",
   dropdownTrundleBedSize:"/dropdown/trundle-bed-sizes",
+
   // Order
   order: "/orders",
+
+  // Material
+  material: "/materials",
+
+  // Cover
+  coverPrice: "/covers/price",
   
 
   // Model
