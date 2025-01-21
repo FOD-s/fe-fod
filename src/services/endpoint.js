@@ -28,6 +28,8 @@ const endpoint = {
   // Button
   buttonPrice: "/buttons/price",
   
+  // Drawer
+  drawerPrice: "/drawers/price",
 
   // Model
   model: "/models",
