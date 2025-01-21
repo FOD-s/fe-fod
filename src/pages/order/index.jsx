@@ -113,8 +113,8 @@ function Order() {
     type: "add",
   });
   const { getTrundleBedPrice } = useTrundleBedService();
-  const [pageForm, setPageForm] = useState(false);
-  const [openCollapse, setOpenCollapse] = useState(false);
+  const [pageForm, setPageForm] = useState(true);
+  const [openCollapse, setOpenCollapse] = useState(true);
   const user = useSelector(DATA_USER);
   const { toast } = useToast();
 
@@ -560,10 +560,6 @@ function Order() {
       setValue("backrest", true);
     }
 
-    if (drawer) {
-      getCustomPriceDrawer(drawer);
-    }
-
     if (foam) {
       getCustomPriceFoam(idProduct, type);
     }
@@ -632,7 +628,7 @@ function Order() {
   }, [button, extra]);
 
   useEffect(() => {
-    if (drawer && idProduct) {
+    if (drawer) {
       getCustomPriceDrawer(drawer);
       if (drawerTotal < 1) {
         setValue("drawerTotal", 1);
