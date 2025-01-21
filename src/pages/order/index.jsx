@@ -508,7 +508,7 @@ function Order() {
 				const res = await getFoamPrice(idProduct, type);
 				setFoamPrice(res?.data.price);
 			} else {
-				const res = await getFoamPrice(idProduct,"");
+				const res = await getFoamPrice(idProduct, "");
 				setFoamPrice(res?.data.price);
 			}
 		} catch (error) {}
@@ -627,12 +627,14 @@ function Order() {
 			getCustomPriceDrawer(drawer);
 			setValue("drawerTotal", 1);
 		}
+    
 	}, [drawer]);
 
 	useEffect(() => {
-		if (drawerPrice) {
-			setDrawerPrice(drawerPrice * drawerTotal);
-		}
+		// if (drawerPrice) {
+		// 	setDrawerPrice(parseRupiah(drawerPrice) * parseInt(drawerTotal));
+		// }
+		console.log(drawerPrice*parseInt(drawerTotal));
 	}, [drawerTotal]);
 
 	useEffect(() => {
@@ -657,9 +659,29 @@ function Order() {
 		}
 	}, [foam]);
 
-	// useEffect(() => {
-	//   setTotalPrice(parseInt(productPrice) + parseInt(customPrice));
-	// }, [customPrice, productPrice]);
+	useEffect(() => {
+		const sumArray = (numbers) => {
+			return numbers.reduce((total, num) => total + num, 0);
+		};
+		const total = [
+			parseInt(productPrice),
+			parseInt(materialPrice),
+			parseInt(coverPrice),
+			parseInt(buttonPrice),
+			parseInt(drawerPrice),
+			parseInt(doubleBackrestPrice),
+			parseInt(foamPrice),
+		];
+		setTotalPrice(sumArray(total));
+	}, [
+		productPrice,
+		materialPrice,
+		coverPrice,
+		buttonPrice,
+		drawerPrice,
+		doubleBackrestPrice,
+		foamPrice,
+	]);
 
 	return (
 		<>
