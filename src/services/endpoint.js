@@ -34,6 +34,9 @@ const endpoint = {
   // Backrest
   backrestPrice: "backrests/price",
 
+  // Foam
+  foamPrice: "foams/price",
+
   // Model
   model: "/models",
 

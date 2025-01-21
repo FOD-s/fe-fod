@@ -18,6 +18,7 @@ import useCoverPriceService from "@/services/cover";
 import useButtonService from "@/services/buttons";
 import useDrawerPriceService from "@/services/drawer";
 import useBackrestPriceService from "@/services/backrest";
+import useFoamPriceService from "@/services/foam";
 import { ChevronDown, ChevronUp, ChevronsLeft } from "lucide-react";
 import { useEffect, useState } from "react";
 import Datepick from "../../components/molecules/Datepick";
@@ -54,6 +55,7 @@ const defaultValues = {
 	drawer: "",
 	drawerTotal: 0,
 	drawerPosition: "",
+	foam: false,
 	color: "",
 	doubleBackrest: false,
 	type: "BASIC",
@@ -105,6 +107,7 @@ function Order() {
 	const { getButtonPrice } = useButtonService();
 	const { getDrawerPrice } = useDrawerPriceService();
 	const { getBackrestPrice } = useBackrestPriceService();
+	const { getFoamPrice } = useFoamPriceService();
 	const [modalProps, setModalProps] = useState({
 		title: "Add Order",
 		type: "add",
@@ -160,6 +163,7 @@ function Order() {
 	const drawer = watch("drawer");
 	const drawerTotal = watch("drawerTotal");
 	const doubleBackrest = watch("doubleBackrest");
+	const foam = watch("foam");
 
 	const getCustomPriceBackrest = async (material) => {
 		try {
@@ -498,6 +502,18 @@ function Order() {
 		}
 	};
 
+	const getCustomPriceFoam = async (idProduct, type) => {
+		try {
+			if (idProduct < 5) {
+				const res = await getFoamPrice(idProduct, type);
+				setFoamPrice(res?.data.price);
+			} else {
+				const res = await getFoamPrice(idProduct,"");
+				setFoamPrice(res?.data.price);
+			}
+		} catch (error) {}
+	};
+
 	useEffect(() => {
 		getListOrder();
 		getOptionProduct();
@@ -528,6 +544,10 @@ function Order() {
 		} else {
 			getOptionTrundleSize(idProduct, backrest);
 			setValue("backrest", true);
+		}
+
+		if (foam) {
+			getCustomPriceFoam(idProduct, type);
 		}
 	}, [idProduct]);
 
@@ -626,6 +646,16 @@ function Order() {
 			setDoubleBackrestPrice(0);
 		}
 	}, [doubleBackrest]);
+
+	useEffect(() => {
+		if (idProduct) {
+			if (foam) {
+				getCustomPriceFoam(idProduct, type);
+			} else {
+				setFoamPrice(0);
+			}
+		}
+	}, [foam]);
 
 	// useEffect(() => {
 	//   setTotalPrice(parseInt(productPrice) + parseInt(customPrice));
