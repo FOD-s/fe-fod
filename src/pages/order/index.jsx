@@ -113,8 +113,8 @@ function Order() {
     type: "add",
   });
   const { getTrundleBedPrice } = useTrundleBedService();
-  const [pageForm, setPageForm] = useState(true);
-  const [openCollapse, setOpenCollapse] = useState(true);
+  const [pageForm, setPageForm] = useState(false);
+  const [openCollapse, setOpenCollapse] = useState(false);
   const user = useSelector(DATA_USER);
   const { toast } = useToast();
 
