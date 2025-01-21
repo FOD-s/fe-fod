@@ -17,6 +17,7 @@ import useMaterialPriceService from "@/services/material";
 import useCoverPriceService from "@/services/cover";
 import useButtonService from "@/services/buttons";
 import useDrawerPriceService from "@/services/drawer";
+import useBackrestPriceService from "@/services/backrest";
 import { ChevronDown, ChevronUp, ChevronsLeft } from "lucide-react";
 import { useEffect, useState } from "react";
 import Datepick from "../../components/molecules/Datepick";
@@ -103,6 +104,7 @@ function Order() {
 	const { getCoverPrice } = useCoverPriceService();
 	const { getButtonPrice } = useButtonService();
 	const { getDrawerPrice } = useDrawerPriceService();
+	const { getBackrestPrice } = useBackrestPriceService();
 	const [modalProps, setModalProps] = useState({
 		title: "Add Order",
 		type: "add",
@@ -157,12 +159,18 @@ function Order() {
 	const extra = watch("extra");
 	const drawer = watch("drawer");
 	const drawerTotal = watch("drawerTotal");
-	const drawerPosition = watch("drawerPosition");
 	const doubleBackrest = watch("doubleBackrest");
 
-	useEffect(() => {
-		console.log(doubleBackrest);
-	}, [doubleBackrest]);
+	const getCustomPriceBackrest = async (material) => {
+		try {
+			const res = await getBackrestPrice(material);
+			console.log(res);
+
+			setDoubleBackrestPrice(res?.data.price);
+		} catch (error) {
+			console.error(error);
+		}
+	};
 
 	const {
 		control: controlEdit,
@@ -527,6 +535,9 @@ function Order() {
 		if (material && idProduct && type) {
 			getCustomPriceMaterial(idProduct, type, material);
 		}
+		if (doubleBackrest) {
+			getCustomPriceBackrest(material);
+		}
 	}, [material]);
 
 	useEffect(() => {
@@ -603,6 +614,18 @@ function Order() {
 			setDrawerPrice(drawerPrice * drawerTotal);
 		}
 	}, [drawerTotal]);
+
+	useEffect(() => {
+		if (doubleBackrest) {
+			if (material) {
+				getCustomPriceBackrest(material);
+			} else {
+				getCustomPriceBackrest("Spondoff");
+			}
+		} else {
+			setDoubleBackrestPrice(0);
+		}
+	}, [doubleBackrest]);
 
 	// useEffect(() => {
 	//   setTotalPrice(parseInt(productPrice) + parseInt(customPrice));

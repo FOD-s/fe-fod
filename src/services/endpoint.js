@@ -31,6 +31,9 @@ const endpoint = {
   // Drawer
   drawerPrice: "/drawers/price",
 
+  // Backrest
+  backrestPrice: "backrests/price",
+
   // Model
   model: "/models",
 
