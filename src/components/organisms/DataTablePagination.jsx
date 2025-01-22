@@ -330,7 +330,7 @@ const DataTablePagination = ({
                 <Button
                   className="w-full p-1"
                   variant="ghost"
-                  onClick={() => handleDetail(row)}
+                  onClick={() => handleDetail(row.id)}
                   title="Detail"
                 >
                   <EyeIcon className="text-blue-600 size-5" />

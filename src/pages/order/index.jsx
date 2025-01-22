@@ -185,6 +185,8 @@ function Order() {
 		defaultValues: defaultValues,
 	});
 
+	const idProductEdit = watchEdit("idProduct");
+
 	const getListOrder = async () => {
 		try {
 			if (user.roleId == 1) {
@@ -218,14 +220,29 @@ function Order() {
 	const setFormEdit = (data) => {
 		setValueEdit("client", data.client);
 		setValueEdit("deliveryAddress", data.deliveryAddress);
-		setValueEdit("idProduct", data.idProduct);
-		setValueEdit("backrest", data.backrest);
-		setValueEdit("doubleBackrest", data.doubleBackrest);
-		setValueEdit("size", data.size);
-		setValueEdit("material", data.material);
-		setValueEdit("color", data.color);
-		setValueEdit("note", data.note);
 		setDeliveryDate(new Date(data.deliveryDate));
+		setValueEdit("idProduct", data.idProduct);
+		setValueEdit("type", data.type);
+		setValueEdit("size", data.size);
+		setValueEdit("color", data.color);
+		setValueEdit("material", data.material);
+		setValueEdit("cover", data.cover);
+		setValueEdit("button", data.button);
+		setValueEdit("extra", data.extra);
+		setValueEdit("drawer", data.drawer);
+		setValueEdit("drawerTotal", data.drawerTotal);
+		setValueEdit("drawerPosition", data.drawerPosition);
+		setValueEdit("foam", data.foam);
+		setValueEdit("doubleBackrest", data.doubleBackrest);
+		setValueEdit("note", data.note);
+
+		setProductPrice(data.productPrice);
+		setMaterialPrice(data.materialPrice);
+		setCoverPrice(data.coverPrice);
+		setButtonPrice(data.buttonPrice);
+		setDrawerPrice(data.drawerPrice);
+		setDoubleBackrestPrice(data.doubleBackrestPrice);
+		setFoamPrice(data.foamPrice);
 	};
 
 	const getDetailOrder = async (id) => {
@@ -546,7 +563,7 @@ function Order() {
 		getOptionDrawer();
 		getOptionButton();
 		getOptionCover();
-		getOptionSize();
+		getOptionSize("0");
 	}, []);
 
 	useEffect(() => {
@@ -776,7 +793,7 @@ function Order() {
 										modalProps.type == "add"  ? errors : errorsEdit
 									}
 								/> */}
-								{idProduct == 5 ? (
+								{(idProduct || idProductEdit) == 5 ? (
 									<RadioButton
 										className="grid items-center w-full grid-cols-2"
 										options={OPTIONS_TRUNDLE_BED}
