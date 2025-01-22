@@ -42,6 +42,7 @@ const InputComponent = ({
 									placeholder={placeholder}
 									disabled={disabled}
 									{...field}
+									min={type === 'number' && 0}
 									className="bg-bg-neumorphism !shadow-neumorphism-inner"
 								/>
 						  )
