@@ -46,7 +46,6 @@ const defaultValues = {
 	client: "",
 	deliveryAddress: "",
 	idProduct: "",
-	backrest: true,
 	size: "",
 	material: "",
 	cover: "",
@@ -156,7 +155,6 @@ function Order() {
 	const material = watch("material");
 	const cover = watch("cover");
 	const size = watch("size");
-	const backrest = watch("backrest");
 	const type = watch("type");
 	const button = watch("button");
 	const extra = watch("extra");
@@ -384,7 +382,6 @@ function Order() {
 		data = { dataPrice, ...data };
 		data.userId = user.id;
 		data.deliveryDate = deliveryDate;
-		data.idProduct == 5 ? delete data.type : delete data.backrest;
 		data.sumPrice = parseInt(totalPrice);
 		data.finalPrice = parseInt(totalPrice);
 		data.material ? (data.material = data.material) : delete data.material;
@@ -537,6 +534,15 @@ function Order() {
 		}
 	};
 
+	const getPriceProduct = async (idProduct, size, type) => {
+		try {
+			const res = await getModelPrice(idProduct, size, type);
+			setProductPrice(res?.data.price);
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
 	useEffect(() => {
 		getListOrder();
 		getOptionProduct();
@@ -563,12 +569,17 @@ function Order() {
 		resetField("size");
 		resetField("doubleBackrest");
 
-		if (idProduct != 5) {
+		if (idProduct) {
+			if (idProduct == 5) {
+				setValue("type", "SANDARAN");
+			} else {
+				setValue("type", "BASIC");
+			}
 			getOptionSize(idProduct, type);
-			setValue("type", "BASIC");
-		} else {
-			getOptionTrundleSize(idProduct, backrest);
-			setValue("backrest", true);
+			// setValue("type", "BASIC");
+			// } else {
+			// 	getOptionTrundleSize(idProduct, backrest);
+			// 	setValue("backrest", true);
 		}
 
 		if (foam) {
@@ -595,38 +606,21 @@ function Order() {
 		setProductPrice(0);
 		resetField("size");
 		getOptionSize(idProduct, type);
+
 		if (material) {
 			getCustomPriceMaterial(idProduct, type, material);
 		}
 	}, [type]);
 
 	useEffect(() => {
-		const getPriceProduct = async (idProduct, size, type, backrest) => {
-			try {
-				if (idProduct != 5) {
-					const res = await getModelPrice(idProduct, size, type);
-					setProductPrice(res?.data.price);
-				} else {
-					const res = await getTrundleBedPrice(idProduct, size, backrest);
-					setProductPrice(res?.data.price);
-				}
-			} catch (error) {
-				console.log(error);
-			}
-		};
-
 		if (idProduct && size) {
-			if (backrest) {
-				getPriceProduct(idProduct, size, type, 1);
-			} else {
-				getPriceProduct(idProduct, size, type, 0);
-			}
+			getPriceProduct(idProduct, size, type);
 		}
 
 		if (size && cover) {
 			getCustomPriceCover(size, cover);
 		}
-	}, [size, backrest]);
+	}, [size]);
 
 	useEffect(() => {
 		if (button) {
@@ -791,7 +785,7 @@ function Order() {
 										className="grid items-center w-full grid-cols-2"
 										options={OPTIONS_TRUNDLE_BED}
 										control={modalProps.type == "add" ? control : controlEdit}
-										name="backrest"
+										name="type"
 										schema={
 											modalProps.type == "add" ? schemaForm : schemaFormEdit
 										}

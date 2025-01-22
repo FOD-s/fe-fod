@@ -161,19 +161,6 @@ const DataTablePagination = ({
             center: true,
           });
           break;
-        case "backrest":
-          columns.push({
-            name: "Sandaran",
-            selector: (row) => {
-              if (row.idProduct == 5) {
-                return row.backrest ? "Sandaran" : "Non Sandaran";
-              }
-              return "-";
-            },
-            // sortable: true,
-            center: true,
-          });
-          break;
         case "size":
           columns.push({
             name: "Ukuran",

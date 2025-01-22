@@ -16,8 +16,8 @@ import {
 } from "lucide-react";
 
 export const OPTIONS_TRUNDLE_BED = [
-  { value: true, label: "Sandaran" },
-  { value: false, label: "Non Sandaran" },
+  { value: "SANDARAN", label: "SANDARAN" },
+  { value: 'NON SANDARAN', label: "NON SANDARAN" },
 ];
 
 export const OPTIONS_TYPE_BED = [
