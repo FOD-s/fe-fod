@@ -112,8 +112,8 @@ function Order() {
 		type: "add",
 	});
 	const { getTrundleBedPrice } = useTrundleBedService();
-	const [pageForm, setPageForm] = useState(true);
-	const [openCollapse, setOpenCollapse] = useState(true);
+	const [pageForm, setPageForm] = useState(false);
+	const [openCollapse, setOpenCollapse] = useState(false);
 	const user = useSelector(DATA_USER);
 	const { toast } = useToast();
 
@@ -483,10 +483,15 @@ function Order() {
 		setDeliveryDate(formattedDate);
 	};
 
-	const getCustomPriceMaterial = async () => {
+	const getCustomPriceMaterial = async (idProduct, type, material) => {
 		try {
-			const res = await getMaterialPrice(idProduct, type, material);
-			setMaterialPrice(res?.data.price);
+			if (idProduct <= 5) {
+				const res = await getMaterialPrice(idProduct, type, material);
+				setMaterialPrice(res?.data.price);
+			} else {
+				const res = await getMaterialPrice(idProduct, type="", material);
+				setMaterialPrice(res?.data.price);
+			}
 		} catch (error) {
 			console.log(error);
 		}
