@@ -469,15 +469,6 @@ function Order() {
 		}
 	};
 
-	const getOptionTrundleSize = async (idProduct, backrest) => {
-		try {
-			const res = await getDropdownTrundleBedSize(idProduct, backrest);
-			setOptionsSizes(res?.data.data);
-		} catch (error) {
-			console.log(error);
-		}
-	};
-
 	const handleChangeDeliveryDate = (date) => {
 		const formattedDate = date.toLocaleDateString("en-CA"); // YYYY-MM-DD
 		setDeliveryDate(formattedDate);
@@ -489,7 +480,7 @@ function Order() {
 				const res = await getMaterialPrice(idProduct, type, material);
 				setMaterialPrice(res?.data.price);
 			} else {
-				const res = await getMaterialPrice(idProduct, type="", material);
+				const res = await getMaterialPrice(idProduct, (type = ""), material);
 				setMaterialPrice(res?.data.price);
 			}
 		} catch (error) {

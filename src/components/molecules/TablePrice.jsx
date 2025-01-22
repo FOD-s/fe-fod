@@ -40,7 +40,7 @@ export default function TablePrice({
       <tbody>
         <tr>
           <td className="w-1/2">
-            <h3>Harga Produk</h3>
+            <h2>Harga Produk</h2>
           </td>
           <td className="text-right">
             <h2>{productPrice ? formatRupiah(productPrice) : "0"}</h2>
