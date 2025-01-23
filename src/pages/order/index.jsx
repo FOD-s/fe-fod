@@ -43,6 +43,8 @@ import * as yup from "yup";
 const MySwal = withReactContent(Swal);
 
 const defaultValues = {
+	id: "",
+	userId: "",
 	client: "",
 	deliveryAddress: "",
 	idProduct: "",
@@ -90,6 +92,7 @@ function Order() {
 		approveOrder,
 		reviewOrder,
 		getOrderById,
+		updateOrder,
 	} = useOrderService();
 	const {
 		getDropdownProduct,
@@ -229,6 +232,8 @@ function Order() {
 	};
 
 	const setFormEdit = (data) => {
+		setValue("id", data.id);
+		setValue("userId", data.userId);
 		setValue("client", data.client);
 		setValue("deliveryAddress", data.deliveryAddress);
 		setDeliveryDate(new Date(data.deliveryDate));
@@ -246,8 +251,6 @@ function Order() {
 		setValue("foam", data.foam);
 		setValue("doubleBackrest", data.doubleBackrest);
 		setValue("note", data.note);
-
-		console.log("set on form");
 
 		setProductPrice(data.productPrice);
 		setMaterialPrice(data.materialPrice);
@@ -271,7 +274,7 @@ function Order() {
 	const handleEdit = (id) => {
 		setModalProps({
 			title: "Edit Order",
-			type: "deatail",
+			type: "edit",
 		});
 		setPageForm(true);
 		getDetailOrder(id);
@@ -445,14 +448,16 @@ function Order() {
 		data.finalPrice = parseInt(totalPrice);
 		data.material ? (data.material = data.material) : delete data.material;
 
-		console.log(data);
-
-		// sendDataOrder(data);
+		sendDataOrder(data);
 	};
 
 	const sendDataOrder = async (data) => {
 		try {
-			const res = await createOrder(data);
+			let res;
+			modalProps.type == "add"
+				? (res = await createOrder(data))
+				: (res = await updateOrder(data.id, data));
+
 			if (res?.status !== 200) {
 				return toast({
 					variant: "destructive",
@@ -635,11 +640,11 @@ function Order() {
 			getOptionSize(idProduct, type);
 		}
 
-    if(material){
-      if (material && idProduct && type) {
+		if (material) {
+			if (material && idProduct && type) {
 				getCustomPriceMaterial(idProduct, type, material);
 			}
-    }
+		}
 
 		if (foam) {
 			getCustomPriceFoam(idProduct, type);
@@ -760,9 +765,9 @@ function Order() {
 		if (optionsSize.length >= 1 && idProduct && size) {
 			getPriceProduct(idProduct, size, type);
 		}
-    // if(idProduct ){
-    //   setValue("size",optionsSize[0].value)
-    // }
+		// if(idProduct ){
+		//   setValue("size",optionsSize[0].value)
+		// }
 	}, [optionsSize]);
 
 	return (

@@ -13,6 +13,7 @@ const useOrderService = () => {
     PUT(`${endpoint.order}/approve/${id}`, dataBody);
   const reviewOrder = (id, dataBody) =>
     PUT(`${endpoint.order}/review/${id}`, dataBody);
+  const updateOrder = (id,dataBody) => PUT (`${endpoint.order}/${id}`,dataBody);
 
   return {
     getAllOrder,
@@ -21,6 +22,7 @@ const useOrderService = () => {
     approveOrder,
     reviewOrder,
     getOrderById,
+    updateOrder
   };
 };
 
