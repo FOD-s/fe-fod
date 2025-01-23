@@ -72,15 +72,15 @@ const schemaForm = yup.object().shape({
 	note: yup.string().nullable(),
 });
 
-const schemaFormEdit = yup.object().shape({
-	client: yup.string().required("Konsumen harus diisi"),
-	deliveryAddress: yup.string().required("Alamat harus diisi"),
-	idProduct: yup.string().required("Produk harus dipilih"),
-	size: yup.string().required("Ukuran harus diisi"),
-	material: yup.string().required("Kain harus dipilih"),
-	color: yup.string().required("Warna harus diisi"),
-	note: yup.string().nullable(),
-});
+// const schemaFormEdit = yup.object().shape({
+// 	client: yup.string().required("Konsumen harus diisi"),
+// 	deliveryAddress: yup.string().required("Alamat harus diisi"),
+// 	idProduct: yup.string().required("Produk harus dipilih"),
+// 	size: yup.string().required("Ukuran harus diisi"),
+// 	material: yup.string().required("Kain harus dipilih"),
+// 	color: yup.string().required("Warna harus diisi"),
+// 	note: yup.string().nullable(),
+// });
 
 function Order() {
 	const {
@@ -181,11 +181,22 @@ function Order() {
 		watch: watchEdit,
 		setValue: setValueEdit,
 	} = useForm({
-		resolver: yupResolver(schemaFormEdit),
+		resolver: yupResolver(schemaForm),
 		defaultValues: defaultValues,
 	});
 
-	const idProductEdit = watchEdit("idProduct");
+	// subscribe form value
+	// const idProductEdit = watchEdit("idProduct");
+	// const materialEdit = watch("material");
+	// const coverEdit = watch("cover");
+	// const sizeEdit = watch("size");
+	// const typeEdit = watch("type");
+	// const buttonEdit = watch("button");
+	// const extraEdit = watch("extra");
+	// const drawerEdit = watch("drawer");
+	// const drawerTotalEdit = watch("drawerTotal");
+	// const doubleBackrestEdit = watch("doubleBackrest");
+	// const foamEdit = watch("foam");
 
 	const getListOrder = async () => {
 		try {
@@ -208,7 +219,7 @@ function Order() {
 				// handlePerRowsChange={handlePerRowsChange}
 				handleAdd={handleAdd}
 				// handleDelete={handleDelete}
-				// handleEdit={handleEdit}
+				handleEdit={handleEdit}
 				handleDetail={handleDetail}
 				statusAksi={user.roleId == 1 ? "validation" : "editAndDetail"}
 				handleApprove={handleApprove}
@@ -218,23 +229,25 @@ function Order() {
 	};
 
 	const setFormEdit = (data) => {
-		setValueEdit("client", data.client);
-		setValueEdit("deliveryAddress", data.deliveryAddress);
+		setValue("client", data.client);
+		setValue("deliveryAddress", data.deliveryAddress);
 		setDeliveryDate(new Date(data.deliveryDate));
-		setValueEdit("idProduct", data.idProduct);
-		setValueEdit("type", data.type);
-		setValueEdit("size", data.size);
-		setValueEdit("color", data.color);
-		setValueEdit("material", data.material);
-		setValueEdit("cover", data.cover);
-		setValueEdit("button", data.button);
-		setValueEdit("extra", data.extra);
-		setValueEdit("drawer", data.drawer);
-		setValueEdit("drawerTotal", data.drawerTotal);
-		setValueEdit("drawerPosition", data.drawerPosition);
-		setValueEdit("foam", data.foam);
-		setValueEdit("doubleBackrest", data.doubleBackrest);
-		setValueEdit("note", data.note);
+		setValue("idProduct", data.idProduct);
+		setValue("type", data.type);
+		setValue("size", data.size);
+		setValue("color", data.color);
+		setValue("material", data.material);
+		setValue("cover", data.cover);
+		setValue("button", data.button);
+		setValue("extra", data.extra);
+		setValue("drawer", data.drawer);
+		setValue("drawerTotal", data.drawerTotal);
+		setValue("drawerPosition", data.drawerPosition);
+		setValue("foam", data.foam);
+		setValue("doubleBackrest", data.doubleBackrest);
+		setValue("note", data.note);
+
+		console.log("set on form");
 
 		setProductPrice(data.productPrice);
 		setMaterialPrice(data.materialPrice);
@@ -253,6 +266,15 @@ function Order() {
 		} catch (error) {
 			console.log(error);
 		}
+	};
+
+	const handleEdit = (id) => {
+		setModalProps({
+			title: "Edit Order",
+			type: "deatail",
+		});
+		setPageForm(true);
+		getDetailOrder(id);
 	};
 
 	const handleDetail = (id) => {
@@ -406,6 +428,28 @@ function Order() {
 		sendDataOrder(data);
 	};
 
+	const submitFormEdit = (data) => {
+		let dataPrice = {
+			productPrice,
+			materialPrice,
+			coverPrice,
+			buttonPrice,
+			drawerPrice,
+			doubleBackrestPrice,
+			foamPrice,
+		};
+
+		data = { dataPrice, ...data };
+		data.deliveryDate = deliveryDate;
+		data.sumPrice = parseInt(totalPrice);
+		data.finalPrice = parseInt(totalPrice);
+		data.material ? (data.material = data.material) : delete data.material;
+
+		console.log(data);
+
+		// sendDataOrder(data);
+	};
+
 	const sendDataOrder = async (data) => {
 		try {
 			const res = await createOrder(data);
@@ -497,7 +541,7 @@ function Order() {
 				const res = await getMaterialPrice(idProduct, type, material);
 				setMaterialPrice(res?.data.price);
 			} else {
-				const res = await getMaterialPrice(idProduct, (type = ""), material);
+				const res = await getMaterialPrice(idProduct, "", material);
 				setMaterialPrice(res?.data.price);
 			}
 		} catch (error) {
@@ -575,12 +619,12 @@ function Order() {
 	}, [pageForm]);
 
 	useEffect(() => {
-		setProductPrice(0);
-		setMaterialPrice(0);
+		// setProductPrice(0);
+		// setMaterialPrice(0);
 
-		resetField("material");
-		resetField("size");
-		resetField("doubleBackrest");
+		// resetField("material");
+		// resetField("size");
+		// resetField("doubleBackrest");
 
 		if (idProduct) {
 			if (idProduct == 5) {
@@ -589,11 +633,13 @@ function Order() {
 				setValue("type", "BASIC");
 			}
 			getOptionSize(idProduct, type);
-			// setValue("type", "BASIC");
-			// } else {
-			// 	getOptionTrundleSize(idProduct, backrest);
-			// 	setValue("backrest", true);
 		}
+
+    if(material){
+      if (material && idProduct && type) {
+				getCustomPriceMaterial(idProduct, type, material);
+			}
+    }
 
 		if (foam) {
 			getCustomPriceFoam(idProduct, type);
@@ -616,9 +662,11 @@ function Order() {
 	}, [cover]);
 
 	useEffect(() => {
-		setProductPrice(0);
-		resetField("size");
-		getOptionSize(idProduct, type);
+		if (type) {
+			getOptionSize(idProduct, type);
+		}
+		// setProductPrice(0);
+		// resetField("size");
 
 		if (material) {
 			getCustomPriceMaterial(idProduct, type, material);
@@ -708,6 +756,15 @@ function Order() {
 		foamPrice,
 	]);
 
+	useEffect(() => {
+		if (optionsSize.length >= 1 && idProduct && size) {
+			getPriceProduct(idProduct, size, type);
+		}
+    // if(idProduct ){
+    //   setValue("size",optionsSize[0].value)
+    // }
+	}, [optionsSize]);
+
 	return (
 		<>
 			{!pageForm ? (
@@ -728,7 +785,7 @@ function Order() {
 							onSubmit={
 								modalProps.type == "add"
 									? handleSubmit(submitForm)
-									: handleSubmitEdit(submitForm)
+									: handleSubmit(submitFormEdit)
 							}
 							className="flex flex-col w-full h-full col-span-2 gap-3 px-6 pb-6"
 						>
@@ -738,22 +795,18 @@ function Order() {
 									name="client"
 									label="Nama"
 									type="text"
-									control={modalProps.type == "add" ? control : controlEdit}
-									schema={
-										modalProps.type == "add" ? schemaForm : schemaFormEdit
-									}
-									errors={modalProps.type == "add" ? errors : errorsEdit}
+									control={control}
+									schema={schemaForm}
+									errors={errors}
 									disabled={modalProps.type == "detail"}
 								/>
 								<InputComponent
 									name="deliveryAddress"
 									label="Alamat"
 									type="text"
-									control={modalProps.type == "add" ? control : controlEdit}
-									schema={
-										modalProps.type == "add" ? schemaForm : schemaFormEdit
-									}
-									errors={modalProps.type == "add" ? errors : errorsEdit}
+									control={control}
+									schema={schemaForm}
+									errors={errors}
 									disabled={modalProps.type == "detail"}
 								/>
 								<Datepick
@@ -770,11 +823,9 @@ function Order() {
 									label="Model"
 									placeholder="Pilih"
 									options={optionsProducts}
-									control={modalProps.type == "add" ? control : controlEdit}
-									errors={modalProps.type == "add" ? errors : errorsEdit}
-									schema={
-										modalProps.type == "add" ? schemaForm : schemaFormEdit
-									}
+									control={control}
+									errors={errors}
+									schema={schemaForm}
 									disabled={modalProps.type == "detail"}
 								/>
 								{/* <InputComponent
@@ -793,15 +844,13 @@ function Order() {
 										modalProps.type == "add"  ? errors : errorsEdit
 									}
 								/> */}
-								{(idProduct || idProductEdit) == 5 ? (
+								{idProduct == 5 ? (
 									<RadioButton
 										className="grid items-center w-full grid-cols-2"
 										options={OPTIONS_TRUNDLE_BED}
-										control={modalProps.type == "add" ? control : controlEdit}
+										control={control}
 										name="type"
-										schema={
-											modalProps.type == "add" ? schemaForm : schemaFormEdit
-										}
+										schema={schemaForm}
 										disabled={modalProps.type == "detail"}
 										label="Tipe"
 										defaultValues={OPTIONS_TRUNDLE_BED[0].value}
@@ -810,11 +859,9 @@ function Order() {
 									<RadioButton
 										className="grid items-center w-full grid-cols-2"
 										options={OPTIONS_TYPE_BED}
-										control={modalProps.type == "add" ? control : controlEdit}
+										control={control}
 										name="type"
-										schema={
-											modalProps.type == "add" ? schemaForm : schemaFormEdit
-										}
+										schema={schemaForm}
 										disabled={modalProps.type == "detail"}
 										label="Tipe"
 										defaultValues={OPTIONS_TYPE_BED[0].value}
@@ -825,22 +872,18 @@ function Order() {
 									label="Ukuran"
 									placeholder="Pilih"
 									options={optionsSize}
-									control={modalProps.type == "add" ? control : controlEdit}
-									errors={modalProps.type == "add" ? errors : errorsEdit}
-									schema={
-										modalProps.type == "add" ? schemaForm : schemaFormEdit
-									}
+									control={control}
+									errors={errors}
+									schema={schemaForm}
 									disabled={modalProps.type == "detail"}
 								/>
 								<InputComponent
 									name="color"
 									label="Warna"
 									type="text"
-									control={modalProps.type == "add" ? control : controlEdit}
-									schema={
-										modalProps.type == "add" ? schemaForm : schemaFormEdit
-									}
-									errors={modalProps.type == "add" ? errors : errorsEdit}
+									control={control}
+									schema={schemaForm}
+									errors={errors}
 									disabled={modalProps.type == "detail"}
 								/>
 							</div>
@@ -864,11 +907,9 @@ function Order() {
 											label="Kain"
 											placeholder="Pilih"
 											options={optionsMaterials}
-											control={modalProps.type == "add" ? control : controlEdit}
-											errors={modalProps.type == "add" ? errors : errorsEdit}
-											schema={
-												modalProps.type == "add" ? schemaForm : schemaFormEdit
-											}
+											control={control}
+											errors={errors}
+											schema={schemaForm}
 											disabled={modalProps.type == "detail"}
 										/>
 										<SelectComponent
@@ -876,11 +917,9 @@ function Order() {
 											label="Amparan"
 											placeholder="Pilih"
 											options={optionsCover}
-											control={modalProps.type == "add" ? control : controlEdit}
-											errors={modalProps.type == "add" ? errors : errorsEdit}
-											schema={
-												modalProps.type == "add" ? schemaForm : schemaFormEdit
-											}
+											control={control}
+											errors={errors}
+											schema={schemaForm}
 											disabled={modalProps.type == "detail"}
 										/>
 										<div className="grid items-center grid-cols-2 col-span-2 gap-3">
@@ -889,24 +928,16 @@ function Order() {
 												label="Kancing"
 												placeholder="Pilih"
 												options={optionsButton}
-												control={
-													modalProps.type == "add" ? control : controlEdit
-												}
-												errors={modalProps.type == "add" ? errors : errorsEdit}
-												schema={
-													modalProps.type == "add" ? schemaForm : schemaFormEdit
-												}
+												control={control}
+												errors={errors}
+												schema={schemaForm}
 												disabled={modalProps.type == "detail"}
 											/>
 											<CheckboxCustom
 												label="Tambah Kancing"
 												name="extra"
-												control={
-													modalProps.type == "add" ? control : controlEdit
-												}
-												schema={
-													modalProps.type == "add" ? schemaForm : schemaFormEdit
-												}
+												control={control}
+												schema={schemaForm}
 												disabled={modalProps.type == "detail"}
 											/>
 										</div>
@@ -916,26 +947,18 @@ function Order() {
 												label="Tipe Laci"
 												placeholder="Pilih"
 												options={optionsDrawer}
-												control={
-													modalProps.type == "add" ? control : controlEdit
-												}
-												errors={modalProps.type == "add" ? errors : errorsEdit}
-												schema={
-													modalProps.type == "add" ? schemaForm : schemaFormEdit
-												}
+												control={control}
+												errors={errors}
+												schema={schemaForm}
 												disabled={modalProps.type == "detail"}
 											/>
 											<InputComponent
 												name="drawerTotal"
 												label="Jumlah Laci"
 												type="number"
-												control={
-													modalProps.type == "add" ? control : controlEdit
-												}
-												schema={
-													modalProps.type == "add" ? schemaForm : schemaFormEdit
-												}
-												errors={modalProps.type == "add" ? errors : errorsEdit}
+												control={control}
+												schema={schemaForm}
+												errors={errors}
 												disabled={modalProps.type == "detail"}
 											/>
 											<SelectComponent
@@ -943,32 +966,24 @@ function Order() {
 												label="Posisi Laci"
 												placeholder="Pilih"
 												options={OPTIONS_DRAWER_POSITION}
-												control={
-													modalProps.type == "add" ? control : controlEdit
-												}
-												errors={modalProps.type == "add" ? errors : errorsEdit}
-												schema={
-													modalProps.type == "add" ? schemaForm : schemaFormEdit
-												}
+												control={control}
+												errors={errors}
+												schema={schemaForm}
 												disabled={modalProps.type == "detail"}
 											/>
 										</div>
 										<CheckboxCustom
 											label="Double Sandaran"
 											name="doubleBackrest"
-											control={modalProps.type == "add" ? control : controlEdit}
-											schema={
-												modalProps.type == "add" ? schemaForm : schemaFormEdit
-											}
+											control={control}
+											schema={schemaForm}
 											disabled={modalProps.type == "detail"}
 										/>
 										<CheckboxCustom
 											label="Busa"
 											name="foam"
-											control={modalProps.type == "add" ? control : controlEdit}
-											schema={
-												modalProps.type == "add" ? schemaForm : schemaFormEdit
-											}
+											control={control}
+											schema={schemaForm}
 											disabled={modalProps.type == "detail"}
 										/>
 									</div>
@@ -978,9 +993,9 @@ function Order() {
 								name="note"
 								label="Note"
 								type="text"
-								control={modalProps.type == "add" ? control : controlEdit}
-								schema={modalProps.type == "add" ? schemaForm : schemaFormEdit}
-								errors={modalProps.type == "add" ? errors : errorsEdit}
+								control={control}
+								schema={schemaForm}
+								errors={errors}
 								disabled={modalProps.type == "detail"}
 							/>
 							<div className="grid grid-cols-1 gap-3 pt-6 mt-3 border-t border-gray-500 lg:grid-cols-2 lg:col-span-2 items-self-end">
