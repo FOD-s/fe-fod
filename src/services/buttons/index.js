@@ -5,7 +5,7 @@ const useButtonService = () => {
     const { GET } = useApi();
 
     const getButtonPrice = (button,extra) =>
-        GET(`${endpoint.buttonPrice}?button=${button}&extra=${extra}`);
+        GET(`${endpoint.buttonPrice}?button=${button}&extra=${extra}&`);
 
     return {
         getButtonPrice,

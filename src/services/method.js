@@ -32,7 +32,7 @@ const useApi = () => {
 		async (path) => {
 			try {
 				const response = await api.get(
-					`${path}?page=${pagination.page}&limit=${pagination.limit}&search=${searchInput}`
+					`${path}page=${pagination.page}&limit=${pagination.limit}&search=${searchInput}`
 					// `${path}`
 				);
 				return response;

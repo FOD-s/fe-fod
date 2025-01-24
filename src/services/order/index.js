@@ -4,10 +4,10 @@ import useApi from "@/services/method";
 const useOrderService = () => {
   const { GET, POST, PUT } = useApi();
 
-  const getAllOrder = () => GET(`${endpoint.order}`);
+  const getAllOrder = () => GET(`${endpoint.order}?`);
   const getListOrderByUserId = (userId) =>
     GET(`${endpoint.order}/filter/${userId}`);
-  const getOrderById = (id) => GET(`${endpoint.order}/${id}`);
+  const getOrderById = (id) => GET(`${endpoint.order}/${id}?`);
   const createOrder = (dataBody) => POST(`${endpoint.order}`, dataBody);
   const approveOrder = (id, dataBody) =>
     PUT(`${endpoint.order}/approve/${id}`, dataBody);

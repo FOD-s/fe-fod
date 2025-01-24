@@ -5,7 +5,7 @@ const useCoverPriceService = () => {
   const { GET } = useApi();
 
   const getCoverPrice = (size, cover) =>
-    GET(`${endpoint.coverPrice}?size=${size}&cover=${cover}`);
+    GET(`${endpoint.coverPrice}?size=${size}&cover=${cover}&`);
 
   return {
     getCoverPrice,

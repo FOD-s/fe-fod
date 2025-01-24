@@ -6,7 +6,7 @@ const useAuthService = () => {
 	const { GET, POST, PUT, PATCH, DELETE, POST_LOGIN } = useApi();
 
 	// GET
-	const authMe = () => GET(`${endpoint.authMe}`);
+	const authMe = () => GET(`${endpoint.authMe}?`);
 	const getUsers = () => GET(`${endpoint.user}`);
 	const getProfile = () => GET(`${endpoint.authMe}`);
 	// POST

@@ -5,7 +5,7 @@ const useDrawerPriceService = () => {
 	const { GET } = useApi();
 
 	const getDrawerPrice = (drawer) =>
-		GET(`${endpoint.drawerPrice}?drawer=${drawer}`);
+		GET(`${endpoint.drawerPrice}?drawer=${drawer}&`);
 
 	return {
 		getDrawerPrice,
