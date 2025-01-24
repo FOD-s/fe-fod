@@ -6,7 +6,7 @@ const useOrderService = () => {
 
   const getAllOrder = () => GET(`${endpoint.order}`);
   const getListOrderByUserId = (userId) =>
-    GET(`${endpoint.order}/filter?userId=${userId}`);
+    GET(`${endpoint.order}/filter/${userId}`);
   const getOrderById = (id) => GET(`${endpoint.order}/${id}`);
   const createOrder = (dataBody) => POST(`${endpoint.order}`, dataBody);
   const approveOrder = (id, dataBody) =>

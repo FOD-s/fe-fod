@@ -1,6 +1,8 @@
 import CheckboxCustom from "@/components/molecules/Checkbox";
 import InputComponent from "@/components/molecules/Input";
+import RadioButton from "@/components/molecules/RadioButton";
 import SelectComponent from "@/components/molecules/SelectCustom";
+import TablePrice from "@/components/molecules/TablePrice";
 import DataTablePagination from "@/components/organisms/DataTablePagination";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,33 +10,31 @@ import {
 	CollapsibleContent,
 	CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { DATA_USER } from "@/features/auth/loginSlice.js";
+import { PAGINATION, SEARCH,updateTotalItem } from "@/features/pagination/paginationSlice";
 import WithAuth from "@/hoc/WithAuth";
+import { useToast } from "@/hooks/use-toast";
+import useBackrestPriceService from "@/services/backrest";
+import useButtonService from "@/services/buttons";
+import useCoverPriceService from "@/services/cover";
+import useDrawerPriceService from "@/services/drawer";
+import useFoamPriceService from "@/services/foam";
+import useMaterialPriceService from "@/services/material";
+import useModelPriceService from "@/services/model";
 import useOrderService from "@/services/order";
 import useSelectService from "@/services/select";
-import useModelPriceService from "@/services/model";
-import useTrundleBedService from "@/services/trundleBd";
-import useMaterialPriceService from "@/services/material";
-import useCoverPriceService from "@/services/cover";
-import useButtonService from "@/services/buttons";
-import useDrawerPriceService from "@/services/drawer";
-import useBackrestPriceService from "@/services/backrest";
-import useFoamPriceService from "@/services/foam";
-import { ChevronDown, ChevronUp, ChevronsLeft } from "lucide-react";
-import { useEffect, useState } from "react";
-import Datepick from "../../components/molecules/Datepick";
-import { formatRupiah, parseRupiah } from "@/utils/formatRupiah";
-import { useSelector } from "react-redux";
-import { DATA_USER } from "@/features/auth/loginSlice.js";
-import { useToast } from "@/hooks/use-toast";
-import RadioButton from "@/components/molecules/RadioButton";
-import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
 import {
+	OPTIONS_DRAWER_POSITION,
 	OPTIONS_TRUNDLE_BED,
 	OPTIONS_TYPE_BED,
-	OPTIONS_DRAWER_POSITION,
 } from "@/utils/constant.js";
-import TablePrice from "@/components/molecules/TablePrice";
+import { formatRupiah, parseRupiah } from "@/utils/formatRupiah";
+import { ChevronDown, ChevronUp, ChevronsLeft } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useSelector,useDispatch } from "react-redux";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import Datepick from "../../components/molecules/Datepick";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
@@ -52,13 +52,13 @@ const defaultValues = {
 	material: "",
 	cover: "",
 	button: "",
-	extra: "",
+	extra: null,
 	drawer: "",
 	drawerTotal: 0,
 	drawerPosition: "",
-	foam: false,
+	foam: null,
 	color: "",
-	doubleBackrest: false,
+	doubleBackrest: null,
 	type: "BASIC",
 	note: "",
 };
@@ -68,9 +68,7 @@ const schemaForm = yup.object().shape({
 	deliveryAddress: yup.string().required("Alamat harus diisi"),
 	idProduct: yup.string().required("Produk harus dipilih"),
 	size: yup.string().required("Ukuran harus diisi"),
-	// material: yup.string().required("Kain harus dipilih"),
 	color: yup.string().required("Warna harus diisi"),
-	doubleBackrest: yup.boolean(),
 	note: yup.string().nullable(),
 });
 
@@ -87,7 +85,6 @@ const schemaForm = yup.object().shape({
 function Order() {
 	const {
 		getAllOrder,
-		getListOrderByUserId,
 		createOrder,
 		approveOrder,
 		reviewOrder,
@@ -101,7 +98,6 @@ function Order() {
 		getDropdownButton,
 		getDropdownCover,
 		getDropdownSize,
-		getDropdownTrundleBedSize,
 	} = useSelectService();
 	const { getMaterialPrice } = useMaterialPriceService();
 	const { getModelPrice } = useModelPriceService();
@@ -110,14 +106,17 @@ function Order() {
 	const { getDrawerPrice } = useDrawerPriceService();
 	const { getBackrestPrice } = useBackrestPriceService();
 	const { getFoamPrice } = useFoamPriceService();
+
+  const dispatch = useDispatch();
+	const paging = useSelector(PAGINATION);
+	const searchValue = useSelector(SEARCH);
+	const user = useSelector(DATA_USER);
 	const [modalProps, setModalProps] = useState({
 		title: "Add Order",
 		type: "add",
 	});
-	const { getTrundleBedPrice } = useTrundleBedService();
 	const [pageForm, setPageForm] = useState(false);
 	const [openCollapse, setOpenCollapse] = useState(false);
-	const user = useSelector(DATA_USER);
 	const { toast } = useToast();
 
 	// options state
@@ -176,40 +175,13 @@ function Order() {
 		}
 	};
 
-	const {
-		control: controlEdit,
-		handleSubmit: handleSubmitEdit,
-		formState: { errors: errorsEdit },
-		reset: resetEdit,
-		watch: watchEdit,
-		setValue: setValueEdit,
-	} = useForm({
-		resolver: yupResolver(schemaForm),
-		defaultValues: defaultValues,
-	});
-
-	// subscribe form value
-	// const idProductEdit = watchEdit("idProduct");
-	// const materialEdit = watch("material");
-	// const coverEdit = watch("cover");
-	// const sizeEdit = watch("size");
-	// const typeEdit = watch("type");
-	// const buttonEdit = watch("button");
-	// const extraEdit = watch("extra");
-	// const drawerEdit = watch("drawer");
-	// const drawerTotalEdit = watch("drawerTotal");
-	// const doubleBackrestEdit = watch("doubleBackrest");
-	// const foamEdit = watch("foam");
-
 	const getListOrder = async () => {
 		try {
-			if (user.roleId == 1) {
-				const res = await getAllOrder();
-				setListData(res?.data.data);
-			} else {
-				const res = await getListOrderByUserId(user.id);
-				setListData(res?.data.data);
-			}
+			const res = await getAllOrder();
+			setListData(res?.data.data);
+      dispatch(
+        updateTotalItem(res.data.paging.totalOrders)
+      )
 		} catch (error) {
 			console.log(error);
 		}
@@ -292,7 +264,7 @@ function Order() {
 	const handleAdd = () => {
 		// setIsDialogOpen(true);
 		setModalProps({
-			// title: "Add Order",
+			title: "Buat Order",
 			type: "add",
 		});
 		setPageForm(true);
@@ -624,13 +596,6 @@ function Order() {
 	}, [pageForm]);
 
 	useEffect(() => {
-		// setProductPrice(0);
-		// setMaterialPrice(0);
-
-		// resetField("material");
-		// resetField("size");
-		// resetField("doubleBackrest");
-
 		if (idProduct) {
 			if (idProduct == 5) {
 				setValue("type", "SANDARAN");
@@ -670,9 +635,6 @@ function Order() {
 		if (type) {
 			getOptionSize(idProduct, type);
 		}
-		// setProductPrice(0);
-		// resetField("size");
-
 		if (material) {
 			getCustomPriceMaterial(idProduct, type, material);
 		}
@@ -769,6 +731,10 @@ function Order() {
 		//   setValue("size",optionsSize[0].value)
 		// }
 	}, [optionsSize]);
+
+	useEffect(() => {
+		getListOrder();
+	}, [searchValue, paging]);
 
 	return (
 		<>

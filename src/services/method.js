@@ -2,12 +2,12 @@ import axios from "axios";
 import { BASE_API } from "@/config/env";
 import { useSelector } from "react-redux";
 import { useCallback } from "react";
-// import { PAGINATION, SEARCH } from "@/features/pagination/paginationSlice";
+import { PAGINATION, SEARCH } from "@/features/pagination/paginationSlice";
 
 const useApi = () => {
 	const token = useSelector((state) => state.user.token);
-	// const pagination = useSelector(PAGINATION);
-	// const searchInput = useSelector(SEARCH);
+	const pagination = useSelector(PAGINATION);
+	const searchInput = useSelector(SEARCH);
 
 	const api = axios.create({
 		baseURL: BASE_API,
@@ -32,8 +32,8 @@ const useApi = () => {
 		async (path) => {
 			try {
 				const response = await api.get(
-					// `${path}?page=${pagination.page}&size=${pagination.size}&search=${searchInput}`
-					`${path}`
+					`${path}?page=${pagination.page}&limit=${pagination.limit}&search=${searchInput}`
+					// `${path}`
 				);
 				return response;
 			} catch (error) {

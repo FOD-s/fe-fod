@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-	paginate: { page: 1, size: 10 },
+	paginate: { page: 1, limit: 10, totalItem: 0 },
 	search: "",
 };
 
@@ -13,7 +13,10 @@ const paginationSlice = createSlice({
 			state.paginate.page = action.payload;
 		},
 		updateLimit: (state, action) => {
-			state.paginate.size = action.payload;
+			state.paginate.limit = action.payload;
+		},
+		updateTotalItem: (state, action) => {
+			state.paginate.totalItem = action.payload;
 		},
 		updateSearch: (state, action) => {
 			state.search = action.payload;
@@ -21,7 +24,7 @@ const paginationSlice = createSlice({
 	},
 });
 
-export const { updatePage, updateSearch, updateLimit } =
+export const { updatePage, updateSearch, updateLimit, updateTotalItem } =
 	paginationSlice.actions;
 export default paginationSlice.reducer;
 
