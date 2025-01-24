@@ -5,7 +5,7 @@ const useBackrestPriceService = () => {
 	const { GET } = useApi();
 
 	const getBackrestPrice = (material) =>
-		GET(`${endpoint.backrestPrice}?material=${material}`);
+		GET(`${endpoint.backrestPrice}?material=${material}&`);
 
 	return {
 		getBackrestPrice,

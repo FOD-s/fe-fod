@@ -8,6 +8,7 @@ export default function TablePrice({
   doubleBackrestPrice,
   foamPrice,
   totalPrice,
+  etcCustom,
 }) {
   const customPrice = [
     {
@@ -61,6 +62,31 @@ export default function TablePrice({
             </td>
           </tr>
         ))}
+        {etcCustom.some(
+          (item) => item.keterangan !== "" && item.nominal !== ""
+        ) && (
+          <>
+            <tr>
+              <td colSpan={2}>
+                <h2 className="font-bold">Lainnya</h2>
+              </td>
+            </tr>
+            {etcCustom.map((item, index) =>
+              item.keterangan !== "" && item.nominal !== "" ? (
+                <tr key={index}>
+                  <td>
+                    <h2>{item.keterangan}</h2>
+                  </td>
+                  <td className="text-right">
+                    <h2>{item.nominal ? formatRupiah(item.nominal) : "0"}</h2>
+                  </td>
+                </tr>
+              ) : (
+                false
+              )
+            )}
+          </>
+        )}
         <tr className="font-bold">
           <td>
             <h1>Total</h1>
