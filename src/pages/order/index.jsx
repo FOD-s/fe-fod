@@ -1,5 +1,6 @@
 import CheckboxCustom from "@/components/molecules/Checkbox";
 import InputComponent from "@/components/molecules/Input";
+import InputDynamic from "@/components/molecules/InputDynamic";
 import RadioButton from "@/components/molecules/RadioButton";
 import SelectComponent from "@/components/molecules/SelectCustom";
 import TablePrice from "@/components/molecules/TablePrice";
@@ -33,13 +34,12 @@ import {
 	OPTIONS_TYPE_BED,
 } from "@/utils/constant.js";
 import { formatRupiah, parseRupiah } from "@/utils/formatRupiah";
-import { ChevronDown, ChevronUp, ChevronsLeft } from "lucide-react";
+import { ChevronDown, ChevronUp, ChevronsLeft, FileCheck2Icon, FileOutputIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import Datepick from "../../components/molecules/Datepick";
-import InputDynamic from "@/components/molecules/InputDynamic";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
@@ -146,6 +146,7 @@ function Order() {
 	let [foamPrice, setFoamPrice] = useState(0);
 	let [totalPrice, setTotalPrice] = useState(0);
 	let [etcCustom, setEtcCustom] = useState(defaultEtcCustom);
+	let [etcPrice, setEtcPrice] = useState(0);
 
 	const {
 		control,
@@ -161,6 +162,7 @@ function Order() {
 	});
 
 	// subscribe form value
+	const orderId = watch("id");
 	const idProduct = watch("idProduct");
 	const material = watch("material");
 	const cover = watch("cover");
@@ -255,6 +257,9 @@ function Order() {
 		setDrawerPrice(data.drawerPrice);
 		setDoubleBackrestPrice(data.doubleBackrestPrice);
 		setFoamPrice(data.foamPrice);
+		setTotalPrice(data.sumPrice);
+		setEtcCustom(data?.etcCustom);
+		setEtcPrice(data?.etcPrice);
 	};
 
 	const getDetailOrder = async (id) => {
@@ -294,12 +299,14 @@ function Order() {
 		setPageForm(true);
 	};
 
-	const sendApproveData = async (id, finalPrice) => {
+	const sendApproveData = async (id, finalPrice, etcCustom, etcPrice) => {
 		const validator = user.name;
 		try {
 			const res = await approveOrder(id, {
 				validator,
 				finalPrice: parseRupiah(finalPrice),
+				etcCustom,
+				etcPrice
 			});
 			if (res?.status !== 200) {
 				return toast({
@@ -316,8 +323,8 @@ function Order() {
 		}
 	};
 
-	const handleApprove = (data) => {
-		const { id, sumPrice } = data;
+	const handleApprove = () => {
+		// const { id, sumPrice } = data;
 		MySwal.fire({
 			title: "Perhatian",
 			text: "Apakah anda yakin untuk menyetujui order dengan harga tersebut ?",
@@ -326,7 +333,7 @@ function Order() {
 			cancelButtonText: `Batal`,
 			icon: "question",
 			input: "text",
-			inputValue: formatRupiah(String(sumPrice)),
+			inputValue: formatRupiah(String(totalPrice + etcPrice)),
 			didOpen: () => {
 				const input = Swal.getInput();
 				input.addEventListener("input", (e) => {
@@ -336,7 +343,7 @@ function Order() {
 			},
 			preConfirm: async (finalPrice) => {
 				try {
-					sendApproveData(id, finalPrice);
+					sendApproveData(orderId, finalPrice, etcCustom, etcPrice);
 				} catch (error) {
 					toast({
 						variant: "destructive",
@@ -352,6 +359,7 @@ function Order() {
 					title: "Berhasil",
 					description: "Order berhasil disetujui",
 				});
+				setPageForm(false);
 			}
 		});
 	};
@@ -601,6 +609,10 @@ function Order() {
 		}
 	};
 
+	const sumArray = (numbers) => {
+		return numbers.reduce((total, num) => total + num, 0);
+	};
+
 	useEffect(() => {
 		getListOrder();
 		getOptionProduct();
@@ -725,9 +737,7 @@ function Order() {
 	}, [foam]);
 
 	useEffect(() => {
-		const sumArray = (numbers) => {
-			return numbers.reduce((total, num) => total + num, 0);
-		};
+
 		const total = [
 			parseInt(productPrice),
 			parseInt(materialPrice),
@@ -737,15 +747,10 @@ function Order() {
 			parseInt(doubleBackrestPrice),
 			parseInt(foamPrice),
 		];
-		const etcCustomTotal =
-			etcCustom.length > 0
-				? etcCustom.reduce((total, item) => total + parseInt(item.nominal), 0)
-				: 0;
-
-
-		user.roleId == 1 ? setTotalPrice(sumArray([...total, etcCustomTotal])) : setTotalPrice(sumArray(total));
-
-
+		if (modalProps.type !== "detail") {
+			setTotalPrice(sumArray(total));
+			// 	user.roleId == 1 ? setTotalPrice(sumArray([...total, etcCustomTotal])) : setTotalPrice(sumArray(total));
+		}
 	}, [
 		productPrice,
 		materialPrice,
@@ -754,8 +759,19 @@ function Order() {
 		drawerPrice,
 		doubleBackrestPrice,
 		foamPrice,
-		etcCustom,
+
 	]);
+
+	useEffect(() => {
+		const etcCustomTotal =
+			etcCustom.some(
+				(item) => item.keterangan !== "" && item.nominal !== ""
+			)
+				? etcCustom.reduce((total, item) => total + parseInt(item.nominal), 0)
+				: 0;
+
+		setEtcPrice(etcCustomTotal)
+	}, [etcCustom])
 
 	useEffect(() => {
 		if (optionsSize.length >= 1 && idProduct && size) {
@@ -1014,19 +1030,30 @@ function Order() {
 										handleInputChange={handleInputChange}
 									/>
 								</div>}
-							<div className="grid grid-cols-1 gap-3 pt-6 mt-3 border-t border-gray-500 lg:grid-cols-2 lg:col-span-2 items-self-end">
-								<Button type="submit" disabled={modalProps.type == "detail"}>
-									Submit
-								</Button>
-								<Button
-									variant="secondary"
-									type="button"
-									onClick={() => resetModal()}
-									disabled={modalProps.type == "detail"}
-								>
-									Reset
-								</Button>
-							</div>
+							{
+								user.roleId == 1 ?
+									<div className="grid grid-cols-1 gap-3 pt-6 mt-3 border-t border-gray-500 lg:grid-cols-2 lg:col-span-2 items-self-end">
+										<Button className="bg-blue-500" type="button" onClick={() => handleApprove()}>
+											<FileCheck2Icon /> Approve
+										</Button>
+										<Button className="bg-orange-500" type="button" onClick={() => handleReview()}>
+											<FileOutputIcon /> Review
+										</Button>
+									</div> :
+									<div className="grid grid-cols-1 gap-3 pt-6 mt-3 border-t border-gray-500 lg:grid-cols-2 lg:col-span-2 items-self-end">
+										<Button type="submit" disabled={modalProps.type == "detail"}>
+											Submit
+										</Button>
+										<Button
+											variant="secondary"
+											type="button"
+											onClick={() => resetModal()}
+											disabled={modalProps.type == "detail"}
+										>
+											Reset
+										</Button>
+									</div>
+							}
 						</form>
 						<div className="flex flex-col p-6">
 							<TablePrice
@@ -1039,6 +1066,7 @@ function Order() {
 								foamPrice={foamPrice}
 								etcCustom={etcCustom}
 								totalPrice={totalPrice}
+								etcPrice={etcPrice}
 							/>
 						</div>
 					</div>
