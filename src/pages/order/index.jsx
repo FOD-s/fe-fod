@@ -742,7 +742,9 @@ function Order() {
 				? etcCustom.reduce((total, item) => total + parseInt(item.nominal), 0)
 				: 0;
 
-		setTotalPrice(sumArray([...total, etcCustomTotal]));
+
+		user.roleId == 1 ? setTotalPrice(sumArray([...total, etcCustomTotal])) : setTotalPrice(sumArray(total));
+
 
 	}, [
 		productPrice,
