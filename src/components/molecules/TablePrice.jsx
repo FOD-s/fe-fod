@@ -73,7 +73,7 @@ export default function TablePrice({
             </td>
           </tr>
 
-          {etcCustom.some(
+          {etcCustom?.some(
             (item) => item.keterangan !== "" && item.nominal !== ""
           ) && (
               <>

@@ -254,7 +254,7 @@ const DataTablePagination = ({
 				cell: (row) => (
 					<div
 						className="flex w-full cursor-pointer justify-evenly"
-						onClick={() => handleDetail(row)}
+						onClick={() => handleDetail(row.id)}
 					>
 						<EyeIcon className="w-5 h-5 text-blue-700" title="Detail" />
 					</div>
@@ -389,9 +389,8 @@ const DataTablePagination = ({
 	const SubHeader = () => {
 		return (
 			<div
-				className={`flex items-center ${
-					user.roleId == 1 ? "justify-end" : "justify-between"
-				} w-full px-3 bg-bg-neumorphism`}
+				className={`flex items-center ${user.roleId == 1 ? "justify-end" : "justify-between"
+					} w-full px-3 bg-bg-neumorphism`}
 			>
 				<Button
 					onClick={() => handleAdd()}

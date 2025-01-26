@@ -68,6 +68,7 @@ const defaultValues = {
 	doubleBackrest: null,
 	type: "BASIC",
 	note: "",
+	status: ""
 };
 
 const schemaForm = yup.object().shape({
@@ -163,6 +164,7 @@ function Order() {
 
 	// subscribe form value
 	const orderId = watch("id");
+	const status = watch("status");
 	const idProduct = watch("idProduct");
 	const material = watch("material");
 	const cover = watch("cover");
@@ -222,7 +224,7 @@ function Order() {
 				// handleDelete={handleDelete}
 				handleEdit={handleEdit}
 				handleDetail={handleDetail}
-				statusAksi={user.roleId == 1 ? "validation" : "editAndDetail"}
+				statusAksi={user.roleId == 1 ? "detailOnly" : "editAndDetail"}
 				handleApprove={handleApprove}
 				handleReview={handleReview}
 			/>
@@ -231,6 +233,7 @@ function Order() {
 
 	const setFormEdit = (data) => {
 		setValue("id", data.id);
+		setValue("status", data.status);
 		setValue("userId", data.userId);
 		setValue("client", data.client);
 		setValue("deliveryAddress", data.deliveryAddress);
@@ -410,6 +413,7 @@ function Order() {
 					title: "Berhasil",
 					description: "Order berhasil dikembalikan",
 				});
+				setPageForm(false)
 			}
 		});
 	};
@@ -764,7 +768,7 @@ function Order() {
 
 	useEffect(() => {
 		const etcCustomTotal =
-			etcCustom.some(
+			etcCustom?.some(
 				(item) => item.keterangan !== "" && item.nominal !== ""
 			)
 				? etcCustom.reduce((total, item) => total + parseInt(item.nominal), 0)
@@ -1023,7 +1027,7 @@ function Order() {
 								<div>
 									<InputDynamic
 										etcCustom={etcCustom}
-										disabled={false}
+										disabled={status == "APPROVED"}
 										errors={errors}
 										handleAddInput={handleAddInput}
 										handleRemoveInput={handleRemoveInput}
@@ -1033,10 +1037,10 @@ function Order() {
 							{
 								user.roleId == 1 ?
 									<div className="grid grid-cols-1 gap-3 pt-6 mt-3 border-t border-gray-500 lg:grid-cols-2 lg:col-span-2 items-self-end">
-										<Button className="bg-blue-500" type="button" onClick={() => handleApprove()}>
+										<Button className="bg-blue-500" type="button" onClick={() => handleApprove()} disabled={status == "APPROVED"}>
 											<FileCheck2Icon /> Approve
 										</Button>
-										<Button className="bg-orange-500" type="button" onClick={() => handleReview()}>
+										<Button className="bg-orange-500" type="button" onClick={() => handleReview()} disabled={status == "APPROVED"}>
 											<FileOutputIcon /> Review
 										</Button>
 									</div> :

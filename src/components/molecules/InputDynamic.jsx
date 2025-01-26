@@ -49,6 +49,7 @@ const InputDynamic = ({
               variant="ghost"
               className="font-bold"
               onClick={handleAddInput}
+              disabled={disabled}
             >
               <Plus className="text-green-500" />
             </Button>
@@ -59,6 +60,7 @@ const InputDynamic = ({
               variant="ghost"
               className="font-bold"
               onClick={() => handleRemoveInput(index)}
+              disabled="disabled"
             >
               <Trash className="text-red-500" />
             </Button>
