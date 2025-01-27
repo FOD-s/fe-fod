@@ -362,6 +362,7 @@ function Order() {
 					title: "Berhasil",
 					description: "Order berhasil disetujui",
 				});
+				getListOrder();
 				setPageForm(false);
 			}
 		});
@@ -413,6 +414,7 @@ function Order() {
 					title: "Berhasil",
 					description: "Order berhasil dikembalikan",
 				});
+				getListOrder();
 				setPageForm(false)
 			}
 		});
