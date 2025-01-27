@@ -261,7 +261,7 @@ function Order() {
 		setDoubleBackrestPrice(data.doubleBackrestPrice);
 		setFoamPrice(data.foamPrice);
 		setTotalPrice(data.sumPrice);
-		setEtcCustom(data?.etcCustom);
+		setEtcCustom(data?.etcCustom ? data?.etcCustom : defaultEtcCustom);
 		setEtcPrice(data?.etcPrice);
 	};
 

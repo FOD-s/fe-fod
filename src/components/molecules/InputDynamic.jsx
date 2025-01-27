@@ -60,7 +60,7 @@ const InputDynamic = ({
               variant="ghost"
               className="font-bold"
               onClick={() => handleRemoveInput(index)}
-              disabled="disabled"
+              disabled={disabled}
             >
               <Trash className="text-red-500" />
             </Button>
