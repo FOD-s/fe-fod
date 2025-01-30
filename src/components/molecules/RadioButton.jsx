@@ -21,7 +21,7 @@ function RadioButton({
 				control={control}
 				render={({ field }) => (
 					<RadioGroup
-						defaultValue={defaultValue}
+						// defaultValue={defaultValue}
 						value={field.value}
 						onValueChange={field.onChange}
 						className={className}
