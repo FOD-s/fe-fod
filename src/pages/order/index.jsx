@@ -16,6 +16,8 @@ import {
 	PAGINATION,
 	SEARCH,
 	updateTotalItem,
+	updatePage,
+	updateLimit,
 } from "@/features/pagination/paginationSlice";
 import WithAuth from "@/hoc/WithAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -639,6 +641,8 @@ function Order() {
 		getOptionButton();
 		getOptionCover();
 		getOptionSize("0");
+		dispatch(updateLimit(10));
+		dispatch(updatePage(1));
 	}, []);
 
 	useEffect(() => {
