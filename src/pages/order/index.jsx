@@ -74,7 +74,7 @@ const defaultValues = {
 	foam: null,
 	color: "",
 	doubleBackrest: null,
-	type: "BASIC",
+	type: "",
 	note: "",
 	status: "",
 };
@@ -163,7 +163,6 @@ function Order() {
 		handleSubmit,
 		formState: { errors },
 		reset,
-		resetField,
 		watch,
 		setValue,
 	} = useForm({
@@ -241,26 +240,25 @@ function Order() {
 	};
 
 	const setFormEdit = (data) => {
-		// setValue("id", data.id);
-		// setValue("status", data.status);
-		// setValue("userId", data.userId);
-		// setValue("client", data.client);
-		// setValue("deliveryAddress", data.deliveryAddress);
-		// setValue("idProduct", data.idProduct);
-		// setValue("type", data.type);
-		// setValue("size", data.size);
-		// setValue("color", data.color);
-		// setValue("material", data.material);
-		// setValue("cover", data.cover);
-		// setValue("button", data.button);
-		// setValue("extra", data.extra);
-		// setValue("drawer", data.drawer);
-		// setValue("drawerTotal", data.drawerTotal);
-		// setValue("drawerPosition", data.drawerPosition);
-		// setValue("foam", data.foam);
-		// setValue("doubleBackrest", data.doubleBackrest);
-		// setValue("note", data.note);
-		reset(data);
+		setValue("id", data.id);
+		setValue("status", data.status);
+		setValue("userId", data.userId);
+		setValue("client", data.client);
+		setValue("deliveryAddress", data.deliveryAddress);
+		setValue("idProduct", data.idProduct);
+		setValue("type", data.type);
+		setValue("size", data.size);
+		setValue("color", data.color);
+		setValue("material", data.material);
+		setValue("cover", data.cover);
+		setValue("button", data.button);
+		setValue("extra", data.extra);
+		setValue("drawer", data.drawer);
+		setValue("drawerTotal", data.drawerTotal);
+		setValue("drawerPosition", data.drawerPosition);
+		setValue("foam", data.foam);
+		setValue("doubleBackrest", data.doubleBackrest);
+		setValue("note", data.note);
 
 		setDeliveryDate(new Date(data.deliveryDate));
 		setProductPrice(data.productPrice);
@@ -648,9 +646,18 @@ function Order() {
 	useEffect(() => {
 		if (!pageForm) {
 			reset();
+			setEtcCustom(defaultEtcCustom);
+			setDeliveryDate(new Date());
+			
 			setProductPrice(0);
 			setMaterialPrice(0);
-			setEtcCustom(defaultEtcCustom);
+			setCoverPrice(0);
+			setButtonPrice(0);
+			setFoamPrice(0);
+			setDrawerPrice(0);
+			setDoubleBackrestPrice(0);
+			setEtcPrice(0);
+			setTotalPrice(0);
 		}
 	}, [pageForm]);
 
@@ -1096,7 +1103,7 @@ function Order() {
 									<Button
 										variant="secondary"
 										type="button"
-										onClick={() => resetModal()}
+										onClick={() => reset()}
 										disabled={modalProps.type == "detail"}
 									>
 										Reset
