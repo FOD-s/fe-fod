@@ -1,37 +1,66 @@
  @keyframes expand {
-        0% {
-          transform: scale(0);
-          opacity: 1;
-        }
-        50% {
-          transform: scale(50);
-          opacity: 0.5;
-        }
-        100% {
-          transform: scale(100);
-          opacity: 0;
-        }
-      }
-      .expand-circle {
-        position: absolute;
-        border-radius: 9999px;
-        animation: expand 4s ease-out forwards;
-      }
-      .circle-1 {
-        width: 6rem;
-        height: 6rem;
-        background-color: #3b82f6;
-        animation-delay: 0s;
-      }
-      .circle-2 {
-        width: 6rem;
-        height: 6rem;
-        background-color: #60a5fa;
-        animation-delay: 0.5s;
-      }
-      .circle-3 {
-        width: 6rem;
-        height: 6rem;
-        background-color: #93c5fd;
-        animation-delay: 1s;
-      }
+   0% {
+     transform: scale(0);
+     opacity: 1;
+   }
+
+   50% {
+     transform: scale(50);
+     opacity: 0.5;
+   }
+
+   100% {
+     transform: scale(100);
+     opacity: 0;
+   }
+ }
+
+ .expand-circle {
+   position: absolute;
+   border-radius: 9999px;
+   animation: expand 4s ease-out forwards;
+ }
+
+ .circle-1 {
+   width: 6rem;
+   height: 6rem;
+   background-color: #3b82f6;
+   animation-delay: 0s;
+ }
+
+ .circle-2 {
+   width: 6rem;
+   height: 6rem;
+   background-color: #60a5fa;
+   animation-delay: 0.5s;
+ }
+
+ .circle-3 {
+   width: 6rem;
+   height: 6rem;
+   background-color: #93c5fd;
+   animation-delay: 1s;
+ }
+
+ .emoji-404 {
+
+   position: relative;
+   animation: mymove 2.5s infinite;
+ }
+
+ @keyframes mymove {
+   33% {
+     top: 0px;
+   }
+
+   66% {
+     top: 20px;
+   }
+
+   100% {
+     top: 0px
+   }
+
+
+
+ }

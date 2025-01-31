@@ -9,17 +9,18 @@ import MainSkeleton from "./components/atoms/MainSkeleton";
 import { Toaster } from "@/components/ui/toaster";
 
 import "./index.css";
+import "./assets/styles/general.css";
 import "react-datepicker/dist/react-datepicker.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <Suspense loading={<MainSkeleton />}>
-          <RouterProvider router={router} />
-          <Toaster />
-        </Suspense>
-      </PersistGate>
-    </Provider>
-  </React.StrictMode>
+	<React.StrictMode>
+		<Provider store={store}>
+			<PersistGate loading={null} persistor={persistor}>
+				<Suspense loading={<MainSkeleton />}>
+					<RouterProvider router={router} />
+					<Toaster />
+				</Suspense>
+			</PersistGate>
+		</Provider>
+	</React.StrictMode>
 );
