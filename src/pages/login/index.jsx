@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import Logo from "@/assets/imgs/pu.png";
 import * as yup from "yup";
 
 const formValues = {
@@ -61,7 +62,8 @@ const Login = () => {
 
 	return (
 		<div className="bg-bg-neumorphism bg-center bg-cover h-screen w-full flex items-center justify-center [perspective:1000px]">
-			<div className="w-3/4 lg:w-1/3 2xl:w-1/4 relative flip-card-inner transition-transform duration-700 transform-gpu [transform-style:preserve-3d] h-full flex items-center">
+			<div className="w-3/4 lg:w-1/3 2xl:w-1/4 relative flip-card-inner transition-transform duration-700 transform-gpu [transform-style:preserve-3d] h-full flex flex-col pt-24 items-center gap-4">
+				<img src={Logo} className="object-scale-down" />
 				<div className="[backface-visibility:hidden] gap-6 bg-bg-neumorphism shadow-neumorphism rounded-2xl p-10 w-full flex flex-col justify-center">
 					<p className="text-2xl font-extrabold leading-6 text-gray-800 transition-all duration-500 focus:outline-none">
 						Login to your account
