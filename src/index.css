@@ -93,6 +93,9 @@
 } */
 
 @layer base {
+  body{
+    overflow: hidden
+  }
 
   /* datatable */
   section header {
@@ -113,7 +116,7 @@
 
   .table-price {
     tr,tr:not(:last-child) td {
-      @apply border border-gray-500 px-3 py-1;
+      @apply px-3 py-1 border border-gray-500;
     }
 
     tr:nth-last-child(1) td {
