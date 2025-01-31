@@ -314,12 +314,11 @@ function Order() {
 		setPageForm(true);
 	};
 
-	const sendApproveData = async (id, finalPrice, etcCustom, etcPrice) => {
+	const sendApproveData = async (id, etcCustom, etcPrice) => {
 		const validator = user.name;
 		try {
 			const res = await approveOrder(id, {
 				validator,
-				finalPrice: parseRupiah(finalPrice),
 				etcCustom,
 				etcPrice,
 			});
@@ -330,8 +329,6 @@ function Order() {
 					description: res?.data.message,
 				});
 			}
-
-			getListOrder();
 			return res;
 		} catch (error) {
 			return error;
@@ -342,23 +339,23 @@ function Order() {
 		// const { id, sumPrice } = data;
 		MySwal.fire({
 			title: "Perhatian",
-			text: "Apakah anda yakin untuk menyetujui order dengan harga tersebut ?",
+			text: "Apakah anda yakin untuk menyetujui order tersebut ?",
 			confirmButtonText: "Ya",
 			showCancelButton: true,
 			cancelButtonText: `Batal`,
 			icon: "question",
-			input: "text",
-			inputValue: formatRupiah(String(totalPrice + etcPrice)),
-			didOpen: () => {
-				const input = Swal.getInput();
-				input.addEventListener("input", (e) => {
-					const formattedValue = formatRupiah(e.target.value); // Format ke Rupiah
-					input.value = formattedValue; // Set nilai input yang sudah diformat
-				});
-			},
-			preConfirm: async (finalPrice) => {
+			// input: "text",
+			// inputValue: formatRupiah(String(totalPrice + etcPrice)),
+			// didOpen: () => {
+			// 	const input = Swal.getInput();
+			// 	input.addEventListener("input", (e) => {
+			// 		const formattedValue = formatRupiah(e.target.value); // Format ke Rupiah
+			// 		input.value = formattedValue; // Set nilai input yang sudah diformat
+			// 	});
+			// },
+			preConfirm: async () => {
 				try {
-					sendApproveData(orderId, finalPrice, etcCustom, etcPrice);
+					sendApproveData(orderId, etcCustom, etcPrice);
 				} catch (error) {
 					toast({
 						variant: "destructive",
