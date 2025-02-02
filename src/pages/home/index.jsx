@@ -49,7 +49,7 @@ const Home = () => {
 
   useEffect(() => {
     if (user.roleId == 2) return navigate("/orders");
-  }, [navigate]);
+  }, [user]);
 
   return (
     <div className="min-h-screen mt-3 bg-bg-neumorphism">
