@@ -108,6 +108,20 @@ export const DATA_NAV = {
       ],
     },
   ],
+  navSeller : [
+    {
+      title: "Orders",
+      url: "#",
+      icon: ShoppingCart,
+      isActive: true,
+      items: [
+        {
+          title: "List",
+          url: "/orders",
+        },
+      ],
+    },
+  ],
   navManagement: [
     {
       title: "Users",

@@ -644,6 +644,7 @@ function Order() {
       reset();
       setEtcCustom(defaultEtcCustom);
       setDeliveryDate(new Date());
+      setOpenCollapse(false);
 
       setProductPrice(0);
       setMaterialPrice(0);
