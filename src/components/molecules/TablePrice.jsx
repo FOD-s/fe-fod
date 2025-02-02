@@ -1,4 +1,5 @@
 import { formatRupiah } from "@/utils/formatRupiah";
+import {Label} from "@/components/ui/label";
 export default function TablePrice({
   productPrice,
   materialPrice,
@@ -66,10 +67,10 @@ export default function TablePrice({
           ))}
           <tr className="font-bold">
             <td>
-              <h1>Jumlah</h1>
+              <Label className="text-xl lg:text-2xl font-bold">Jumlah</Label>
             </td>
             <td className="text-right">
-              <h1>{totalPrice ? formatRupiah(totalPrice) : "0"}</h1>
+              <Label className="text-xl lg:text-2xl font-bold">{totalPrice ? formatRupiah(totalPrice) : "0"}</Label>
             </td>
           </tr>
 
@@ -98,10 +99,10 @@ export default function TablePrice({
                 )}
                 <tr className="font-bold">
                   <td>
-                    <h1>Jumlah</h1>
+                    <Label className="text-xl lg:text-2xl">Jumlah</Label>
                   </td>
                   <td className="text-right">
-                    <h1>{etcPrice ? formatRupiah(etcPrice) : "0"}</h1>
+                    <Label className="text-xl lg:text-2xl">{etcPrice ? formatRupiah(etcPrice) : "0"}</Label>
                   </td>
                 </tr>
               </>
@@ -109,8 +110,8 @@ export default function TablePrice({
         </tbody>
       </table>
       <span className="flex justify-between font-bold px-3">
-        <h1>Harga Final :</h1>
-        <h1> {formatRupiah(totalPrice + etcPrice)}</h1>
+        <Label className="text-xl lg:text-2xl font-bold">Harga Final :</Label>
+        <Label className="text-xl lg:text-2xl font-bold"> {formatRupiah(totalPrice + etcPrice)}</Label>
       </span >
 
     </>

@@ -843,7 +843,7 @@ function Order() {
               <ChevronsLeft /> Kembali
             </Button>
           </div>
-          <div className="grid grid-cols-3 p-4 rounded-md shadow-neumorphism">
+          <div className="grid grid-cols-1 lg:grid-cols-3  p-4 rounded-md shadow-neumorphism">
             <form
               onSubmit={
                 modalProps.type == "add"
