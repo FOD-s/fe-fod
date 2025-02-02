@@ -322,7 +322,7 @@ const SidebarInset = React.forwardRef<
     <main
       ref={ref}
       className={cn(
-        "relative flex min-h-svh flex-1 flex-col bg-bg-neumorphism overflow-hidden",
+        "relative flex min-h-svh flex-1 flex-col bg-bg-neumorphism",
         "peer-data-[variant=inset]:min-h-[calc(100svh-theme(spacing.4))] md:peer-data-[variant=inset]:m-2 md:peer-data-[state=collapsed]:peer-data-[variant=inset]:ml-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow",
         className
       )}
@@ -404,7 +404,7 @@ const SidebarContent = React.forwardRef<
 			ref={ref}
 			data-sidebar="content"
 			className={cn(
-				"flex min-h-0 flex-1 flex-col overflow-auto px-3 group-data-[collapsible=icon]:overflow-hidden group-data-[collapsible=icon]:px-0",
+				"flex min-h-0 flex-1 flex-col  px-3 group-data-[collapsible=icon]:overflow-hidden group-data-[collapsible=icon]:px-0",
 				className
 			)}
 			{...props}

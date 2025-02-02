@@ -446,7 +446,7 @@ const DataTablePagination = ({
 	};
 
 	return (
-		<section className="w-full px-5 py-3 overflow-hidden rounded-lg bg-bg-neumorphism shadow-neumorphism">
+		<section className="w-full px-5 py-3 overflow-auto rounded-lg bg-bg-neumorphism shadow-neumorphism">
 			<DataTable
 				className="datatable-custom bg-bg-neummorphism"
 				columns={columns}
