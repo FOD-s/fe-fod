@@ -21,14 +21,14 @@ function Layout() {
   }, [isLogin]);
 
   return (
-    <div>
-      <SidebarProvider>
-        <AppSidebar />
-        <SidebarInset>
-          <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 bg-bg-neumorphism">
-            <div className="flex items-center gap-2 px-4 bg-bg-neumorphism">
-              <SidebarTrigger className="-ml-1 hover:bg-bg-neumorphism shadow-neumorphism hover:shadow-neumorphism-hover" />
-              {/* <Separator orientation="vertical" className="h-4 mr-2" />
+		<div>
+			<SidebarProvider>
+				<AppSidebar />
+				<SidebarInset>
+					<header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 bg-bg-neumorphism">
+						<div className="flex items-center gap-2 px-4 bg-bg-neumorphism">
+							<SidebarTrigger className="-ml-1 hover:bg-bg-neumorphism shadow-neumorphism hover:shadow-neumorphism-hover" />
+							{/* <Separator orientation="vertical" className="h-4 mr-2" />
 							<Breadcrumb>
 								<BreadcrumbList>
 									<BreadcrumbItem className="hidden md:block">
@@ -42,15 +42,15 @@ function Layout() {
 									</BreadcrumbItem>
 								</BreadcrumbList>
 							</Breadcrumb> */}
-            </div>
-          </header>
-          <div className="flex flex-col flex-1 gap-4 p-6 pt-3 rounded-tl-xl bg-bg-neumorphism shadow-neumorphism-inner h-screen overflow-auto">
-            <Outlet />
-          </div>
-        </SidebarInset>
-      </SidebarProvider>
-    </div>
-  );
+						</div>
+					</header>
+					<div className="flex flex-col flex-1 h-screen gap-4 p-6 pt-3 overflow-auto rounded-tl-xl bg-bg-neumorphism shadow-neumorphism-inner">
+						<Outlet />
+					</div>
+				</SidebarInset>
+			</SidebarProvider>
+		</div>
+	);
 }
 
 export default Layout;

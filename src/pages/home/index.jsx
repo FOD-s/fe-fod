@@ -52,12 +52,12 @@ const Home = () => {
   }, [user]);
 
   return (
-    <div className="min-h-screen mt-3 bg-bg-neumorphism">
-      <h1 className="mb-6 text-2xl font-bold">Dashboard</h1>
+    <>
+      <div className="flex flex-col gap-6">
+      <h1 className="text-2xl font-bold">Dashboard</h1>
       {/* <h2 className="mb-4 text-xl font-semibold">
 				Comfortable Living Solutions
 			</h2> */}
-      <div className="grid gap-6">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
           <div className="p-4 rounded-lg shadow-neumorphism bg-bg-neumorphism">
             <h3 className="text-gray-500">Total Sales</h3>
@@ -135,7 +135,7 @@ const Home = () => {
         <div className="p-6 rounded-lg shadow-neumorphism bg-bg-neumorphism">
           <h3 className="mb-4 text-xl font-semibold">Latest Orders</h3>
           <div className="overflow-x-auto">
-            <table className="min-w-full">
+            <table className="w-full">
               <thead>
                 <tr>
                   <th className="text-left">Order ID</th>
@@ -198,7 +198,7 @@ const Home = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
