@@ -12,7 +12,7 @@ function RadioButton({
 	disabled,
 }) {
 	return (
-		<div className="flex flex-col justify-evenly">
+		<div className="flex flex-col gap-1 justify-evenly">
 			<Label htmlFor={name} className="font-bold">
 				{label}
 			</Label>
