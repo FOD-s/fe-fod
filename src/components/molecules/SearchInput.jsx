@@ -21,7 +21,7 @@ const SearchInput = () => {
 	}, [searchValue]);
 
 	return (
-		<div className="relative flex items-center justify-center w-1/3 ">
+		<div className="relative flex items-center justify-center w-full lg:w-1/3 ">
 			<Search className="absolute left-3" color="grey" size={20} />
 			<input
 				type="text"

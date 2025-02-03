@@ -843,7 +843,7 @@ function Order() {
               <ChevronsLeft /> Kembali
             </Button>
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-3  p-4 rounded-md shadow-neumorphism">
+          <div className="grid grid-cols-1 p-4 rounded-md lg:grid-cols-3 shadow-neumorphism">
             <form
               onSubmit={
                 modalProps.type == "add"
@@ -879,8 +879,8 @@ function Order() {
                   disabled={modalProps.type == "detail"}
                 />
               </div>
-              <div className="grid grid-cols-2 gap-3 pb-6 border-b border-gray-500">
-                <h2 className="col-span-2 font-bold">Produk</h2>
+              <div className="grid grid-cols-1 gap-3 pb-6 border-b border-gray-500 lg:grid-cols-2">
+                <h2 className="font-bold lg:col-span-2">Produk</h2>
                 <SelectComponent
                   name="idProduct"
                   label="Model"
@@ -963,8 +963,8 @@ function Order() {
                     </Button>
                   </span>
                 </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <div className="grid items-center grid-cols-2 gap-3 pb-6 border-b border-gray-500">
+                <CollapsibleContent >
+                  <div className="flex flex-col gap-3 pb-6 border-b border-gray-500 lg:grid lg:grid-cols-2">
                     <SelectComponent
                       name="material"
                       label="Kain"
@@ -985,7 +985,7 @@ function Order() {
                       schema={schemaForm}
                       disabled={modalProps.type == "detail"}
                     />
-                    <div className="grid items-center grid-cols-2 col-span-2 gap-3">
+                    <div className="grid grid-cols-1 gap-3 lg:items-center lg:grid-cols-2 lg:col-span-2">
                       <SelectComponent
                         name="button"
                         label="Kancing"
@@ -1004,7 +1004,7 @@ function Order() {
                         disabled={modalProps.type == "detail"}
                       />
                     </div>
-                    <div className="grid grid-cols-3 col-span-2 gap-3">
+                    <div className="grid gap-3 lg:grid-cols-3 lg:col-span-2">
                       <SelectComponent
                         name="drawer"
                         label="Tipe Laci"

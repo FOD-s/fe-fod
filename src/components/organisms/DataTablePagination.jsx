@@ -431,7 +431,7 @@ const DataTablePagination = ({
 		return (
 			<div
 				className={`flex items-center ${
-					user.roleId == 1 ? "justify-end" : "justify-between"
+					user.roleId == 1 ? "justify-end" : "justify-between gap-3"
 				} w-full px-3 bg-bg-neumorphism`}
 			>
 				<Button
