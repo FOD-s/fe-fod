@@ -12,6 +12,10 @@ import {
 	updateTotalItem,
 } from "@/features/pagination/paginationSlice";
 import WithAuth from "@/hoc/WithAuth";
+import SearchInput from "@/components/molecules/SearchInput";
+import { DATA_USER } from "@/features/auth/loginSlice.js";
+import { Button } from "@/components/ui/button";
+import Modal from "@/components/molecules/Modal";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
@@ -20,10 +24,34 @@ import * as yup from "yup";
 import DataTablePagination from "@/components/organisms/DataTablePagination";
 
 function User(props) {
+	const dispatch = useDispatch();
 	const { getListUser } = useUserService();
+	const user = useSelector(DATA_USER);
+	const [openModal, setOpenModal] = useState(false);
+	let [modalProps, setModalProps] = useState({
+		title: "Add Cabang",
+		type: "add",
+	});
+
 	const [listData, setListData] = useState([]);
 
-  const getListData = async () => {
+	const handleAdd = () => {
+		setModalProps({
+			title: "Add User",
+			type: "add",
+		});
+		setOpenModal(true);
+	};
+
+	const handleEdit = () => {
+		setModalProps({
+			title: "Edit User",
+			type: "edit",
+		});
+		setOpenModal(true);
+	};
+
+	const getListData = async () => {
 		try {
 			const res = await getListUser();
 			setListData(res?.data.data);
@@ -33,30 +61,44 @@ function User(props) {
 		}
 	};
 
+	const SubHeader = () => {
+		return (
+			<div
+				className={`flex items-center justify-between gap-3
+				w-full bg-bg-neumorphism`}
+			>
+				<Button onClick={() => handleAdd()}>Add</Button>
+				<SearchInput />
+			</div>
+		);
+	};
+
 	const renderDatatable = (data) => {
 		return (
 			<DataTablePagination
 				data={data}
 				// handlePerRowsChange={handlePerRowsChange}
-				// handleAdd={handleAdd}
 				// handleDelete={handleDelete}
-				// handleEdit={handleEdit}
-				// handleDetail={handleDetail}
-				// statusAksi={user.roleId == 1 ? "detailOnly" : "editAndDetail"}
-				// handleApprove={handleApprove}
-				// handleReview={handleReview}
+				handleEdit={handleEdit}
+				subHeaderComponent={<SubHeader />}
 			/>
 		);
 	};
 
-  useEffect(()=>{
-    getListData();
-  },[])
+	useEffect(() => {
+		getListData();
+	}, []);
 
 	return (
 		<>
 			<h1>User</h1>
 			{listData && renderDatatable(listData)}
+
+			<Modal
+				isDialogOpen={openModal}
+				title={modalProps.title}
+				onOpenChange={() => setOpenModal(false)}
+			></Modal>
 		</>
 	);
 }

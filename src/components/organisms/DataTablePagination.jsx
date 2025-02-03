@@ -74,6 +74,7 @@ const DataTablePagination = ({
 	handleDetail,
 	handleApprove,
 	handleReview,
+	subHeaderComponent
 }) => {
 	const dispatch = useDispatch();
 	const user = useSelector(DATA_USER);
@@ -450,23 +451,23 @@ const DataTablePagination = ({
 			break;
 	}
 
-	const SubHeader = () => {
-		return (
-			<div
-				className={`flex items-center ${
-					user.roleId == 1 ? "justify-end" : "justify-between gap-3"
-				} w-full bg-bg-neumorphism`}
-			>
-				<Button
-					onClick={() => handleAdd()}
-					className={user.roleId == 1 ? "hidden" : "flex"}
-				>
-					Add
-				</Button>
-				<SearchInput />
-			</div>
-		);
-	};
+	// const SubHeader = () => {
+	// 	return (
+	// 		<div
+	// 			className={`flex items-center ${
+	// 				user.roleId == 1 ? "justify-end" : "justify-between gap-3"
+	// 			} w-full bg-bg-neumorphism`}
+	// 		>
+	// 			<Button
+	// 				onClick={() => handleAdd()}
+	// 				className={user.roleId == 1 ? "hidden" : "flex"}
+	// 			>
+	// 				Add
+	// 			</Button>
+	// 			<SearchInput />
+	// 		</div>
+	// 	);
+	// };
 
 	return (
 		<section className="w-full px-5 py-3 overflow-auto rounded-lg bg-bg-neumorphism shadow-neumorphism">
@@ -490,7 +491,8 @@ const DataTablePagination = ({
 				noDataComponent={<MessageEmptyData />}
 				conditionalRowStyles={conditionalOverdue}
 				subHeader
-				subHeaderComponent={<SubHeader />}
+				subHeaderComponent={subHeaderComponent}
+				// subHeaderComponent={<SubHeader />}
 			/>
 		</section>
 	);
