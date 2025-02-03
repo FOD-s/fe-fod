@@ -246,15 +246,15 @@ const DataTablePagination = ({
 						grow: 2,
 					});
 					break;
-				// case "deliveryDate":
-				// 	columns.push({
-				// 		name: "Tanggal Pengiriman",
-				// 		selector: (row) => row.deliveryDate,
-				// 		// sortable: true,
-				// 		center: true,
-				// 		grow: 2,
-				// 	});
-				// 	break;
+				case "deliveryDate":
+					columns.push({
+						name: "Tanggal Pengiriman",
+						selector: (row) => formatDateYMD(row.deliveryDate),
+						// sortable: true,
+						center: true,
+						grow: 2,
+					});
+					break;
 				case "note":
 					columns.push({
 						name: "Catatan",
