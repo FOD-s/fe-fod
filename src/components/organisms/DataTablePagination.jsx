@@ -158,10 +158,10 @@ const DataTablePagination = ({
 					break;
 				case "name":
 					columns.push({
-						name: "Name",
+						name: "Nama",
 						selector: (row) => row.name,
 						sortable: true,
-						center: true,
+						// center: true,
 						grow: 1,
 						cell: (row) =>
 							row.name ? (
@@ -169,6 +169,28 @@ const DataTablePagination = ({
 							) : (
 								<span className="w-full text-center">-</span>
 							),
+					});
+					break;
+				case "email":
+					columns.push({
+						name: "Email",
+						selector: (row) => row.email,
+						center: true,
+						sortable: true,
+					});
+					break;
+				case "roleId":
+					columns.push({
+						name: "Role",
+						selector: (row) => row.roleId,
+						cell: (row) =>
+							row.roleId == 1 ? (
+								<span className="w-full text-center">Admin</span>
+							) : (
+								<span className="w-full text-center">Sales</span>
+							),
+						center: true,
+						sortable: true,
 					});
 					break;
 				case "sales":
@@ -191,7 +213,7 @@ const DataTablePagination = ({
 						name: "Status",
 						selector: (row) => row.status,
 						cell: (row) => {
-							return renderStatus(row.status)
+							return renderStatus(row.status);
 						},
 						// sortable: true,
 						center: true,
@@ -260,7 +282,7 @@ const DataTablePagination = ({
 						name: "Catatan",
 						selector: (row) => row.note || "-",
 						// sortable: true,
-						grow:2,
+						grow: 2,
 						center: true,
 					});
 					break;
