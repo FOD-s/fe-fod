@@ -243,7 +243,7 @@ const DataTablePagination = ({
 						selector: (row) => formatDateYMD(row.orderDate),
 						// sortable: true,
 						center: true,
-						grow: 2,
+						// grow: 2,
 					});
 					break;
 				case "deliveryDate":
@@ -252,7 +252,7 @@ const DataTablePagination = ({
 						selector: (row) => formatDateYMD(row.deliveryDate),
 						// sortable: true,
 						center: true,
-						grow: 2,
+						// grow: 2,
 					});
 					break;
 				case "note":
@@ -260,6 +260,7 @@ const DataTablePagination = ({
 						name: "Catatan",
 						selector: (row) => row.note || "-",
 						// sortable: true,
+						grow:2,
 						center: true,
 					});
 					break;
