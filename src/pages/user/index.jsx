@@ -26,7 +26,6 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 
 import DataTablePagination from "@/components/organisms/DataTablePagination";
-import { use } from "react";
 
 const defaultValues = {
 	name: "",
@@ -42,9 +41,15 @@ const schemaForm = yup.object().shape({
 	roleId: yup.string().required("role is required"),
 });
 
+const schemaFormEdit = yup.object().shape({
+	name: yup.string().required("name is required"),
+	email: yup.string().required("email is required"),
+	roleId: yup.string().required("role is required"),
+});
+
 function User(props) {
 	const dispatch = useDispatch();
-	const { getListUser, createUser, updateUser } = useUserService();
+	const { getListUser, createUser, updateUser, getUserById } = useUserService();
 	const user = useSelector(DATA_USER);
 	const [openModal, setOpenModal] = useState(false);
 	let [modalProps, setModalProps] = useState({
@@ -60,8 +65,20 @@ function User(props) {
 		handleSubmit,
 		formState: { errors },
 		reset,
+		setValue,
 	} = useForm({
 		resolver: yupResolver(schemaForm),
+		defaultValues: defaultValues,
+	});
+
+	const {
+		control: controlEdit,
+		handleSubmit: handleSubmitEdit,
+		formState: { errors: errorsEdit },
+		reset: resetEdit,
+		setValue: setValueEdit,
+	} = useForm({
+		resolver: yupResolver(schemaFormEdit),
 		defaultValues: defaultValues,
 	});
 
@@ -73,12 +90,29 @@ function User(props) {
 		setOpenModal(true);
 	};
 
-	const handleEdit = () => {
+	const handleEdit = (id) => {
 		setModalProps({
 			title: "Edit User",
 			type: "edit",
 		});
 		setOpenModal(true);
+		getUser(id);
+	};
+
+	const getUser = async (id) => {
+		try {
+			const res = await getUserById(id);
+			setFormEdit(res?.data);
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const setFormEdit = (data) => {
+		setValueEdit("id", data.id);
+		setValueEdit("name", data.name);
+		setValueEdit("email", data.email);
+		setValueEdit("roleId", data.roleId);
 	};
 
 	const getListData = async () => {
@@ -145,6 +179,7 @@ function User(props) {
 	useEffect(() => {
 		if (!openModal) {
 			reset();
+			resetEdit();
 		}
 	}, [openModal]);
 
@@ -160,15 +195,19 @@ function User(props) {
 			>
 				<form
 					className="flex flex-col gap-3 px-6"
-					onSubmit={handleSubmit(submitForm)}
+					onSubmit={
+						modalProps.type == "add"
+							? handleSubmit(submitForm)
+							: handleSubmitEdit(submitForm)
+					}
 				>
 					<InputComponent
 						name="name"
 						label="Nama"
 						type="text"
-						control={control}
-						schema={schemaForm}
-						errors={errors}
+						control={modalProps.type == "add" ? control : controlEdit}
+						schema={modalProps.type == "add" ? schemaForm : schemaFormEdit}
+						errors={modalProps.type == "add" ? errors : errorsEdit}
 						disabled={modalProps.type == "detail"}
 					/>
 					<div className="grid w-full grid-flow-col gap-3">
@@ -176,29 +215,31 @@ function User(props) {
 							name="email"
 							label="Email"
 							type="email"
-							control={control}
-							schema={schemaForm}
-							errors={errors}
+							control={modalProps.type == "add" ? control : controlEdit}
+							schema={modalProps.type == "add" ? schemaForm : schemaFormEdit}
+							errors={modalProps.type == "add" ? errors : errorsEdit}
 							disabled={modalProps.type == "detail"}
 						/>
-						<InputComponent
-							name="password"
-							label="Password"
-							type="password"
-							control={control}
-							schema={schemaForm}
-							errors={errors}
-							disabled={modalProps.type == "detail"}
-						/>
+						{modalProps.type != "edit" && (
+							<InputComponent
+								name="password"
+								label="Password"
+								type="password"
+								control={modalProps.type == "add" ? control : controlEdit}
+								schema={modalProps.type == "add" ? schemaForm : schemaFormEdit}
+								errors={modalProps.type == "add" ? errors : errorsEdit}
+								disabled={modalProps.type == "detail"}
+							/>
+						)}
 					</div>
 					<SelectComponent
 						name="roleId"
 						label="Role"
 						placeholder="Pilih"
 						options={OPTIONS_ROLE}
-						control={control}
-						errors={errors}
-						schema={schemaForm}
+						control={modalProps.type == "add" ? control : controlEdit}
+						errors={modalProps.type == "add" ? errors : errorsEdit}
+						schema={modalProps.type == "add" ? schemaForm : schemaFormEdit}
 						disabled={modalProps.type == "detail"}
 					/>
 					<div className="grid grid-cols-1 gap-3 py-6 mt-3 border-t border-gray-500 lg:grid-cols-2 lg:col-span-2 items-self-end">
@@ -208,7 +249,7 @@ function User(props) {
 						<Button
 							variant="secondary"
 							type="button"
-							onClick={() => reset()}
+							onClick={() => (modalProps.type == "add" ? reset() : resetEdit())}
 							disabled={modalProps.type == "detail"}
 						>
 							Reset

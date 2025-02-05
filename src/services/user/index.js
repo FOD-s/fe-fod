@@ -7,11 +7,13 @@ const useUserService = () => {
 	const getListUser = () => GET(`${endpoint.user}?`);
 	const createUser = (dataBody) => POST(`${endpoint.user}`, dataBody);
 	const updateUser = (id, dataBody) => PUT(`${endpoint.user}/${id}`, dataBody);
+  const getUserById = (id) => GET(`${endpoint.user}/${id}?`);
 
 	return {
 		getListUser,
 		createUser,
 		updateUser,
+    getUserById
 	};
 };
 
