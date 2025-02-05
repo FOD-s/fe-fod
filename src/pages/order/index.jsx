@@ -253,7 +253,7 @@ function Order() {
 				statusAksi={user.roleId == 1 ? "detailOnly" : "editAndDetail"}
 				handleApprove={handleApprove}
 				handleReview={handleReview}
-        subHeaderComponent= {<SubHeader />}
+				subHeaderComponent={<SubHeader />}
 			/>
 		);
 	};
@@ -348,6 +348,8 @@ function Order() {
 					description: res?.data.message,
 				});
 			}
+
+			getListOrder();
 			return res;
 		} catch (error) {
 			return error;
@@ -390,7 +392,6 @@ function Order() {
 					title: "Berhasil",
 					description: "Order berhasil disetujui",
 				});
-				getListOrder();
 				setPageForm(false);
 			}
 		});
@@ -442,7 +443,6 @@ function Order() {
 					title: "Berhasil",
 					description: "Order berhasil dikembalikan",
 				});
-				getListOrder();
 				setPageForm(false);
 			}
 		});
