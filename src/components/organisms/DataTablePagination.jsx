@@ -305,7 +305,7 @@ const DataTablePagination = ({
 						className="flex w-full cursor-pointer justify-evenly"
 						onClick={() => handleEdit(row)}
 					>
-						<PencilIcon className="w-5 h-5 text-orange-500" title="Ubah" />
+						<PencilIcon className="w-5 h-5 text-green-700" title="Ubah" />
 					</div>
 				),
 				allowOverflow: true,
@@ -399,7 +399,7 @@ const DataTablePagination = ({
 									title="Detail"
 									disabled={row.status == "APPROVED"}
 								>
-									<PencilIcon className="text-yellow-600 size-5" />
+									<PencilIcon className="text-green-700 size-5" />
 									Edit
 								</Button>
 							</DropdownMenuItem>
@@ -433,7 +433,7 @@ const DataTablePagination = ({
 						/> */}
 
 						<PencilIcon
-							className="w-5 h-5 text-orange-500 cursor-pointer"
+							className="w-5 h-5 text-green-700 cursor-pointer"
 							title="Ubah"
 							onClick={() => handleEdit(row.id)}
 						/>
