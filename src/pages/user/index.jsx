@@ -27,6 +27,8 @@ import * as yup from "yup";
 
 import DataTablePagination from "@/components/organisms/DataTablePagination";
 
+const MySwal = withReactContent(Swal);
+
 const defaultValues = {
 	name: "",
 	email: "",
@@ -49,7 +51,8 @@ const schemaFormEdit = yup.object().shape({
 
 function User(props) {
 	const dispatch = useDispatch();
-	const { getListUser, createUser, updateUser, getUserById } = useUserService();
+	const { getListUser, createUser, updateUser, getUserById, deleteUser } =
+		useUserService();
 	const user = useSelector(DATA_USER);
 	const [openModal, setOpenModal] = useState(false);
 	let [modalProps, setModalProps] = useState({
@@ -141,8 +144,7 @@ function User(props) {
 		return (
 			<DataTablePagination
 				data={data}
-				// handlePerRowsChange={handlePerRowsChange}
-				// handleDelete={handleDelete}
+				handleDelete={handleDelete}
 				handleEdit={handleEdit}
 				subHeaderComponent={<SubHeader />}
 			/>
@@ -170,6 +172,39 @@ function User(props) {
 		} catch (error) {
 			console.log(error);
 		}
+	};
+
+	const handleDelete = async (id) => {
+		MySwal.fire({
+			title: "Perhatian",
+			text: "Apakah anda yakin untuk menghapus user tersebut ?",
+			confirmButtonText: "Ya",
+			showCancelButton: true,
+			cancelButtonText: `Batal`,
+			icon: "question",
+			confirmButtonColor: "#ff0000",
+			preConfirm: async () => {
+				try {
+					const res = await deleteUser(id);
+					return res;
+				} catch (error) {
+					toast({
+						variant: "destructive",
+						title: "Error",
+						description: error?.message,
+					});
+				}
+			},
+			allowOutsideClick: () => !Swal.isLoading(),
+		}).then((result) => {
+			if (result.isConfirmed) {
+				toast({
+					title: "Berhasil",
+					description: "User berhasil dihapus.",
+				});
+			}
+			getListData();
+		});
 	};
 
 	useEffect(() => {
